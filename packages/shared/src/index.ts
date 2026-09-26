@@ -77,3 +77,56 @@ export const AuditJob = z.object({
   liveStore: z.boolean().default(true),
 });
 export type AuditJob = z.infer<typeof AuditJob>;
+
+export const Platform = z.enum(["shopify", "woocommerce", "bigcommerce", "magento", "custom", "unknown"]);
+export type Platform = z.infer<typeof Platform>;
+
+export const AI_BOTS = ["GPTBot", "ChatGPT-User", "OAI-SearchBot", "ClaudeBot", "PerplexityBot", "Google-Extended", "GrokBot"] as const;
+
+export const StoreProfile = z.object({
+  url: z.string().url(),
+  finalUrl: z.string().url(),
+  profiledAt: z.string(),
+  durationMs: z.number(),
+  platform: z.object({ name: Platform, confidence: z.number(), signals: z.array(z.string()) }),
+  rendering: z.object({ jsOnly: z.boolean(), framework: z.string().optional(), visibleTextLength: z.number() }),
+  products: z.object({
+    source: z.enum(["shopify_json", "woo_store_api", "sitemap", "jsonld", "links", "none"]),
+    sampleUrls: z.array(z.string()),
+    sampleNames: z.array(z.string()),
+    variantsRequired: z.boolean(),
+    optionNames: z.array(z.string()),
+  }),
+  structure: z.object({
+    searchUrl: z.string().optional(),
+    categoryUrls: z.array(z.string()),
+    cart: z.enum(["page", "drawer", "unknown"]),
+    cartUrl: z.string().optional(),
+    checkoutHost: z.string().optional(),
+    guestCheckout: z.enum(["yes", "no", "unknown"]),
+  }),
+  hostility: z.object({
+    botProtection: z.string().optional(),
+    captcha: z.string().optional(),
+    cookieBanner: z.string().optional(),
+    newsletterPopup: z.boolean(),
+    loginWall: z.boolean(),
+    blockedStatus: z.number().optional(),
+  }),
+  ai: z.object({
+    robotsAllows: z.record(z.boolean()),
+    llmsTxt: z.boolean(),
+    agentsMd: z.boolean(),
+  }),
+  structuredData: z.object({
+    productJsonLd: z.boolean(),
+    itemList: z.boolean(),
+    feed: z.string().optional(),
+  }),
+  category: z.string(),
+  searchQueries: z.array(z.string()),
+  journeyHints: z.array(z.string()),
+  confidence: z.number(),
+  notes: z.array(z.string()),
+});
+export type StoreProfile = z.infer<typeof StoreProfile>;
