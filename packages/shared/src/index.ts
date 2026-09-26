@@ -130,3 +130,72 @@ export const StoreProfile = z.object({
   notes: z.array(z.string()),
 });
 export type StoreProfile = z.infer<typeof StoreProfile>;
+
+export const Archetype = z.enum(["feed-reader", "browser-agent"]);
+export type Archetype = z.infer<typeof Archetype>;
+
+export const Persona = z.object({ id: z.string(), label: z.string(), archetype: Archetype });
+export type Persona = z.infer<typeof Persona>;
+
+export const TemplateId = z.enum(["feed-reader", "direct-link", "search-first", "category-browse", "variant-required", "cart-drawer", "buy-now"]);
+export type TemplateId = z.infer<typeof TemplateId>;
+
+export const Expect = z.object({
+  urlContains: z.string().optional(),
+  urlHost: z.string().optional(),
+  text: z.string().optional(),
+  anyOf: z.array(z.string()).optional(),
+});
+export type Expect = z.infer<typeof Expect>;
+
+export const SessionStep = z.discriminatedUnion("op", [
+  z.object({ op: z.literal("goto"), url: z.string() }),
+  z.object({ op: z.literal("fetch"), url: z.string(), expect: Expect }),
+  z.object({ op: z.literal("dismiss"), what: z.string(), optional: z.boolean() }),
+  z.object({ op: z.literal("act"), instr: z.string(), expect: Expect, requiredIf: z.string().optional() }),
+  z.object({ op: z.literal("stop"), reason: z.string() }),
+]);
+export type SessionStep = z.infer<typeof SessionStep>;
+
+export const Session = z.object({
+  id: z.string(),
+  persona: z.string(),
+  archetype: Archetype,
+  template: TemplateId,
+  goal: z.string(),
+  steps: z.array(SessionStep),
+  maxSteps: z.number(),
+  budgetMs: z.number(),
+  liveStore: z.boolean(),
+});
+export type Session = z.infer<typeof Session>;
+
+export const StepStatus = z.enum(["ok", "failed", "blocked", "skipped", "stopped"]);
+export type StepStatus = z.infer<typeof StepStatus>;
+
+export const StepResult = z.object({
+  index: z.number(),
+  op: z.string(),
+  label: z.string(),
+  status: StepStatus,
+  reason: z.string().optional(),
+  blocker: z.string().optional(),
+  screenshot: z.string().optional(),
+  url: z.string().optional(),
+  ms: z.number(),
+});
+export type StepResult = z.infer<typeof StepResult>;
+
+export const SessionResult = z.object({
+  sessionId: z.string(),
+  persona: z.string(),
+  archetype: Archetype,
+  template: TemplateId,
+  goal: z.string(),
+  status: z.enum(["pass", "fail", "blocked"]),
+  failedStep: z.number().optional(),
+  summary: z.string(),
+  steps: z.array(StepResult),
+  durationMs: z.number(),
+});
+export type SessionResult = z.infer<typeof SessionResult>;

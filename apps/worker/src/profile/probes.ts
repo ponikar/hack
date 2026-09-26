@@ -152,15 +152,15 @@ export async function probeSitemap(origin: string, sitemaps: string[]) {
   const first = sitemaps[0] ?? `${origin}/sitemap.xml`;
   const { res, text } = await get(first, { headers: { accept: "application/xml,text/xml" } }).catch(() => ({ res: undefined, text: "" }));
   if (!res?.ok) return [];
-  const isProduct = (u: string) => { try { return PRODUCT_PATH.test(new URL(u).pathname); } catch { return false; } };
-  const all = locs(text);
-  if (/<sitemapindex/i.test(text)) {
+  const isProduct = (u: string) => { try { return PRODUCT_PATH.test(new URL(u).pathname) && !/sitemap|\.xml(\.gz)?$/i.test(u); } catch { return false; } };
+  let xml = text;
+  for (let depth = 0; depth < 2 && /<sitemapindex/i.test(xml); depth++) {
+    const all = locs(xml);
     const child = all.find((u) => /product/i.test(u)) ?? all[0];
     if (!child) return [];
-    const { text: childXml } = await get(child, { headers: { accept: "application/xml,text/xml" } }).catch(() => ({ text: "" }));
-    return locs(childXml).filter(isProduct).slice(0, 10);
+    xml = await get(child, { headers: { accept: "application/xml,text/xml" } }).then((r) => r.text).catch(() => "");
   }
-  return all.filter(isProduct).slice(0, 10);
+  return locs(xml).filter(isProduct).slice(0, 10);
 }
 
 export async function probeProductPage(url: string) {

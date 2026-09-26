@@ -11,7 +11,7 @@ export function NewsletterPopup() {
         <h2 className="font-semibold">Get 10% off</h2>
         <input placeholder="Email" className="border w-full px-2 py-1" />
         <button className="bg-black text-white px-3 py-1 w-full">Subscribe</button>
-        <button onClick={() => setOpen(false)} aria-label="close" className="text-xs opacity-0">×</button>
+        <button onClick={() => setOpen(false)} aria-label="close" className="hidden">×</button>
       </div>
     </div>
   );

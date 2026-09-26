@@ -8,7 +8,9 @@
     "start": "tsx --env-file=../../.env src/index.ts",
     "run:once": "tsx --env-file=../../.env src/cli.ts",
     "typecheck": "tsc --noEmit",
-    "profile:store": "tsx --env-file=../../.env src/profile-cli.ts"
+    "profile:store": "tsx --env-file=../../.env src/profile-cli.ts",
+    "sessions:store": "tsx --env-file=../../.env src/sessions-cli.ts",
+    "replay:store": "tsx --env-file=../../.env src/replay-cli.ts"
   },
   "dependencies": {
     "@watchdog/db": "workspace:*",
