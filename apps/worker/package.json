@@ -1,0 +1,26 @@
+{
+  "name": "worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --env-file=../../.env src/index.ts",
+    "start": "tsx --env-file=../../.env src/index.ts",
+    "run:once": "tsx --env-file=../../.env src/cli.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@watchdog/db": "workspace:*",
+    "@watchdog/shared": "workspace:*",
+    "cheerio": "^1.0.0",
+    "openai": "^4.80.0",
+    "pg-boss": "^10.1.5",
+    "playwright": "^1.50.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsx": "^4.19.0",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "ai-buyer-watchdog",
+  "private": true,
+  "packageManager": "pnpm@10.32.1",
+  "scripts": {
+    "dev": "pnpm -r --parallel --filter web --filter worker dev",
+    "dev:web": "pnpm --filter web dev",
+    "dev:worker": "pnpm --filter worker dev",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:push": "pnpm --filter @watchdog/db push",
+    "db:studio": "pnpm --filter @watchdog/db studio",
+    "typecheck": "pnpm -r typecheck",
+    "setup": "pnpm install && pnpm --filter worker exec playwright install chromium && pnpm db:up && sleep 3 && pnpm db:push"
+  }
+}
