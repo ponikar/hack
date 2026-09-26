@@ -40,3 +40,21 @@ pnpm --filter worker run:once http://localhost:3000/store?mode=fixed fixed --tes
 |---|---|---|---|
 | broken | client fetch only | none | newsletter popup + forced sign-in |
 | fixed | SSR | present | guest form, test card |
+
+## Store profile (step 1 of the engine)
+
+```sh
+pnpm --filter worker profile:store https://www.allbirds.com
+```
+
+Eight parallel HTTP probes, no browser, ~1-5s. Output is a `StoreProfile` (see `packages/shared`). Design in `docs/engine.md`.
+
+## Sessions and replay (engine steps 2 and 3)
+
+```sh
+pnpm --filter worker sessions:store https://www.allbirds.com   # profile → sessions JSON
+pnpm --filter worker replay:store  https://www.allbirds.com   # profile → sessions → replay, one line per persona
+pnpm --filter worker replay:store  "http://localhost:3000/store?mode=broken"
+```
+
+Feed-reader personas fetch without JavaScript. Browser-agent personas drive Chromium with deterministic fast-path actions, Grok only when a key is set. Screenshots land in `apps/web/public/screenshots/<runId>/`.
