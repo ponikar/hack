@@ -40,3 +40,11 @@ pnpm --filter worker run:once http://localhost:3000/store?mode=fixed fixed --tes
 |---|---|---|---|
 | broken | client fetch only | none | newsletter popup + forced sign-in |
 | fixed | SSR | present | guest form, test card |
+
+## Store profile (step 1 of the engine)
+
+```sh
+pnpm --filter worker profile:store https://www.allbirds.com
+```
+
+Eight parallel HTTP probes, no browser, ~1-5s. Output is a `StoreProfile` (see `packages/shared`). Design in `docs/engine.md`.

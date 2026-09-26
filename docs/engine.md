@@ -29,7 +29,7 @@ STORE URL
 | HTTP | Node `fetch`, 4s timeout each | nothing to install |
 | HTML | `cheerio` | already installed |
 | robots.txt | `robots-parser` | spec-compliant, gives sitemap URLs too |
-| sitemap | `sitemapper` | handles sitemap indexes, active |
+| sitemap | hand-rolled, 2 fetches max | `sitemapper` walks every child of a sitemap index (Zara took 104s) |
 | bot protection | `is-antibot` | 30+ providers from headers+HTML, released Sep 2026, zero deps |
 | platform | hand-rolled signatures | wappalyzer is dead, APIs cost money, we need 5 platforms |
 | structured data | cheerio + `JSON.parse` | every npm extractor is 6+ years stale |
