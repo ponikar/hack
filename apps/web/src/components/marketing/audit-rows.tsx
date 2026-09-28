@@ -40,7 +40,7 @@ export function StepChip({ label, state, detail }: { label: string; state: StepS
     >
       <ChipIcon s={state} />
       {label}
-      {detail && state === "blocked" && <span className="font-normal opacity-80">{detail}</span>}
+      {detail && <span className={`font-normal opacity-80 ${state === "blocked" ? "" : "invisible"}`}>{detail}</span>}
     </motion.span>
   );
 }
@@ -71,12 +71,16 @@ export function stateAt(step: MockBuyer["steps"][number], revealed: number, inde
   return "pending";
 }
 
-export function BuyerRow({ buyer, revealed, compact }: { buyer: MockBuyer; revealed: number; compact?: boolean }) {
+export function BuyerRow({ buyer, revealed, compact, shown = true }: { buyer: MockBuyer; revealed: number; compact?: boolean; shown?: boolean }) {
   const failedIndex = buyer.steps.findIndex((s) => s.end === "blocked");
   const done = revealed >= buyer.steps.length || (failedIndex >= 0 && revealed > failedIndex);
   const failed = failedIndex >= 0 && revealed > failedIndex;
   return (
-    <div className={`grid gap-1.5 ${compact ? "py-2.5" : "py-3"} md:gap-4 ${compact ? "md:grid-cols-[150px_1fr]" : "md:grid-cols-[168px_1fr]"}`}>
+    <motion.div
+      animate={{ opacity: shown ? 1 : 0, y: shown ? 0 : 6 }}
+      transition={{ duration: 0.35, ease: EASE }}
+      className={`grid gap-1.5 ${compact ? "py-2.5" : "py-3"} md:gap-4 ${compact ? "md:grid-cols-[150px_1fr]" : "md:grid-cols-[168px_1fr]"}`}
+    >
       <div className="flex min-w-0 items-center gap-2">
         <Monogram name={buyer.name} />
         <div className="min-w-0">
@@ -98,21 +102,16 @@ export function BuyerRow({ buyer, revealed, compact }: { buyer: MockBuyer; revea
             );
           })}
         </div>
-        <AnimatePresence initial={false}>
-          {done && (
-            <motion.p
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: EASE }}
-              className={`mt-1 truncate text-[12px] leading-snug ${failed ? "text-fail" : "text-muted"}`}
-            >
-              {buyer.note}
-            </motion.p>
-          )}
-        </AnimatePresence>
+        <motion.p
+          animate={{ opacity: done ? 1 : 0, y: done ? 0 : 4 }}
+          transition={{ duration: 0.3, ease: EASE }}
+          className={`mt-1 h-[17px] truncate text-[12px] leading-snug ${failed ? "text-fail" : "text-muted"}`}
+          aria-hidden={!done}
+        >
+          {buyer.note}
+        </motion.p>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -122,14 +121,13 @@ const CHIP_TONE: Record<MockChip["tone"], string> = {
   warn: "border-warn/30 bg-warn-soft text-warn",
 };
 
-export function ProfileChip({ chip }: { chip: MockChip }) {
+export function ProfileChip({ chip, shown = true }: { chip: MockChip; shown?: boolean }) {
   return (
     <motion.span
-      layout
-      initial={{ opacity: 0, scale: 0.85, y: 4 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.9 }}
+      initial={false}
+      animate={shown ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.85, y: 4 }}
       transition={{ duration: 0.3, ease: EASE }}
+      aria-hidden={!shown}
       className={`inline-flex h-6 items-center rounded-md border px-2 text-[11.5px] font-medium ${CHIP_TONE[chip.tone]}`}
     >
       {chip.label}
@@ -199,14 +197,14 @@ export function VerdictTile({ name, verdict, note, shown }: { name: string; verd
   );
 }
 
-export function FixCard({ fix, index = 0 }: { fix: MockFix; index?: number }) {
+export function FixCard({ fix, index = 0, shown = true }: { fix: MockFix; index?: number; shown?: boolean }) {
   return (
     <motion.li
-      layout
-      initial={{ opacity: 0, x: 24 }}
-      animate={{ opacity: 1, x: 0 }}
+      initial={false}
+      animate={shown ? { opacity: 1, x: 0 } : { opacity: 0, x: 24 }}
       exit={{ opacity: 0, x: -12, height: 0, paddingTop: 0, paddingBottom: 0, overflow: "hidden" }}
-      transition={{ duration: 0.4, ease: EASE, delay: index * 0.06 }}
+      transition={{ duration: 0.4, ease: EASE, delay: shown ? index * 0.06 : 0 }}
+      aria-hidden={!shown}
       className="grid gap-1.5 border-l-2 border-fail bg-fail-soft/40 px-3.5 py-3 md:grid-cols-[1fr_auto] md:gap-6"
     >
       <div className="min-w-0">
