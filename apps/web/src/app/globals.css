@@ -1,56 +1,62 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #ffffff;
-  --surface: #f6f6f7;
-  --surface-2: #ececee;
-  --line: #e4e4e7;
-  --line-strong: #c9c9ce;
-  --ink: #101012;
-  --ink-2: #3f3f46;
-  --muted: #71717a;
-  --faint: #a1a1aa;
+  --bg: #f5f4ef;
+  --surface: #ffffff;
+  --surface-2: #ecebe4;
+  --line: #e2e0d7;
+  --line-strong: #c6c3b7;
+  --ink: #17150f;
+  --ink-2: #4b4840;
+  --muted: #78746a;
+  --faint: #a7a397;
 
-  --accent: #2b4de6;
-  --accent-ink: #ffffff;
-  --accent-soft: #e9edfd;
+  --accent: #17150f;
+  --accent-ink: #f5f4ef;
+  --accent-soft: #e6e4db;
 
-  --ok: #1a8a4e;
-  --ok-soft: #e3f4ea;
-  --fail: #d63a2f;
-  --fail-soft: #fbe7e5;
-  --warn: #b86e00;
-  --warn-soft: #fbefd9;
-  --skip: #8a8a93;
-  --skip-soft: #ededf0;
+  --ok: #17874a;
+  --ok-soft: #dcf2e3;
+  --fail: #e63e1f;
+  --fail-soft: #fce3dc;
+  --warn: #b06a08;
+  --warn-soft: #fae9cf;
+  --skip: #8a867c;
+  --skip-soft: #ebe9e1;
+
+  --glow: rgba(230, 62, 31, 0.16);
+  --shadow-card: 0 1px 2px rgba(23, 21, 15, 0.05), 0 24px 60px -28px rgba(23, 21, 15, 0.28);
 
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0b0b0d;
-    --surface: #131316;
-    --surface-2: #1c1c21;
-    --line: #232328;
-    --line-strong: #37373f;
-    --ink: #f4f4f5;
-    --ink-2: #c8c8cf;
-    --muted: #8f8f99;
-    --faint: #5f5f69;
+    --bg: #111110;
+    --surface: #191917;
+    --surface-2: #232220;
+    --line: #27261f;
+    --line-strong: #3b3931;
+    --ink: #f3f1ea;
+    --ink-2: #c8c5bb;
+    --muted: #8f8b80;
+    --faint: #5f5c53;
 
-    --accent: #7b93ff;
-    --accent-ink: #0b0b0d;
-    --accent-soft: #1a2147;
+    --accent: #f3f1ea;
+    --accent-ink: #111110;
+    --accent-soft: #27261f;
 
-    --ok: #43c57a;
-    --ok-soft: #10281b;
-    --fail: #f0655a;
-    --fail-soft: #331614;
-    --warn: #e8a23a;
-    --warn-soft: #32230b;
-    --skip: #77777f;
-    --skip-soft: #1f1f24;
+    --ok: #4dcc80;
+    --ok-soft: #12291b;
+    --fail: #ff6b47;
+    --fail-soft: #3b1710;
+    --warn: #e8a53c;
+    --warn-soft: #33240c;
+    --skip: #7e7a70;
+    --skip-soft: #1f1e1a;
+
+    --glow: rgba(255, 107, 71, 0.18);
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 24px 60px -28px rgba(0, 0, 0, 0.7);
 
     color-scheme: dark;
   }
@@ -77,20 +83,23 @@
   --color-warn-soft: var(--warn-soft);
   --color-skip: var(--skip);
   --color-skip-soft: var(--skip-soft);
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --shadow-card: var(--shadow-card);
 }
 
 html {
   background: var(--bg);
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
-  font-feature-settings: "cv11", "ss01";
+  font-feature-settings: "ss01", "cv05";
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 :focus-visible {
@@ -99,7 +108,7 @@ body {
 }
 
 ::selection {
-  background: var(--accent-soft);
+  background: var(--fail-soft);
 }
 
 @keyframes pulse-soft {
@@ -112,14 +121,88 @@ body {
   }
 }
 
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
 .skeleton {
   background: var(--surface-2);
   border-radius: 6px;
   animation: pulse-soft 1.6s ease-in-out infinite;
 }
 
+.marquee-track {
+  animation: marquee 48s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.caret {
+  animation: caret 1s steps(1) infinite;
+}
+
+.glow-card {
+  position: relative;
+}
+.glow-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), var(--glow), transparent 70%);
+}
+.glow-card:hover::before {
+  opacity: 1;
+}
+
+.dash-flow {
+  stroke-dasharray: 6 6;
+  animation: dash-flow 1.2s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .skeleton {
+  html {
+    scroll-behavior: auto;
+  }
+  .skeleton,
+  .marquee-track,
+  .caret,
+  .dash-flow {
     animation: none;
   }
   * {
