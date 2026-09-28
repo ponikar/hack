@@ -15,25 +15,25 @@ export default function Home() {
         <section id="audit" className="relative scroll-mt-14 overflow-hidden">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-[520px] [background:radial-gradient(60%_50%_at_70%_0%,var(--glow),transparent_70%)]"
+            className="pointer-events-none absolute inset-x-0 top-0 h-[560px] [background:radial-gradient(50%_60%_at_50%_0%,var(--glow),transparent_70%)]"
           />
-          <div className="relative mx-auto grid max-w-6xl gap-12 px-4 pb-16 pt-16 sm:px-6 sm:pt-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-center lg:gap-10 lg:pb-24">
-            <div className="max-w-xl">
+          <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-16 sm:px-6 sm:pt-24 lg:pb-24">
+            <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
               <Reveal y={12}>
-                <h1 className="text-[44px] font-semibold leading-[0.98] tracking-[-0.04em] text-balance sm:text-[64px] lg:text-[68px]">
+                <h1 className="text-[44px] font-semibold leading-[0.98] tracking-[-0.04em] text-balance sm:text-[64px] lg:text-[76px]">
                   Watch AI buyers try to buy from your store.
                 </h1>
               </Reveal>
               <Reveal delay={0.08} y={12}>
-                <p className="mt-6 max-w-md text-[17px] leading-relaxed text-ink-2 sm:text-[19px]">
-                  Watchdog shops your store as ChatGPT, Perplexity, Grok, Google and Amazon do, in a real browser, and screenshots the step where each one stops.
+                <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-ink-2 sm:text-[19px]">
+                  Seven AI buyers shop your store in a real browser. See the step where each one stops.
                 </p>
               </Reveal>
-              <Reveal delay={0.16} y={12} className="mt-8">
-                <UrlForm secondary />
+              <Reveal delay={0.16} y={12} className="mt-8 flex w-full justify-center">
+                <UrlForm secondary centered />
               </Reveal>
             </div>
-            <Reveal delay={0.2} y={20}>
+            <Reveal delay={0.24} y={20} className="mx-auto mt-14 max-w-5xl">
               <LiveAudit />
             </Reveal>
           </div>

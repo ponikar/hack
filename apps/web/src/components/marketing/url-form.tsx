@@ -3,11 +3,10 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "./motion";
-import { LIVE_AUDIT_RESTART } from "./live-audit";
 
-export function UrlForm({ size = "lg", secondary = false, placeholder = "yourstore.com" }: { size?: "lg" | "md"; secondary?: boolean; placeholder?: string }) {
+export function UrlForm({ size = "lg", secondary = false, centered = false, placeholder = "yourstore.com" }: { size?: "lg" | "md"; secondary?: boolean; centered?: boolean; placeholder?: string }) {
   const router = useRouter();
   const [url, setUrl] = useState("");
   const [busy, setBusy] = useState(false);
@@ -21,10 +20,6 @@ export function UrlForm({ size = "lg", secondary = false, placeholder = "yoursto
     router.push(`/dashboard/new?url=${encodeURIComponent(v)}`);
   }
 
-  function watchDemo() {
-    document.getElementById("live-audit")?.scrollIntoView({ behavior: "smooth", block: "center" });
-    window.dispatchEvent(new Event(LIVE_AUDIT_RESTART));
-  }
 
   return (
     <div className="w-full max-w-xl">
@@ -49,20 +44,15 @@ export function UrlForm({ size = "lg", secondary = false, placeholder = "yoursto
         </Button>
       </form>
       {secondary && (
-        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13.5px]">
-          <Link href="/report/demo" className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line-strong px-3.5 font-medium text-ink transition-colors hover:bg-surface">
+        <div className={`mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] text-muted ${centered ? "justify-center" : ""}`}>
+          <Link href="/report/demo" className="inline-flex items-center gap-1 font-medium text-ink transition-colors hover:text-fail">
             See a finished report
             <ArrowRight className="size-3.5" aria-hidden />
           </Link>
-          <button type="button" onClick={watchDemo} className="group inline-flex items-center gap-1.5 text-[13px] text-ink-2 transition-colors hover:text-fail">
-            <span className="grid size-4 place-items-center rounded-full border border-line-strong transition-colors group-hover:border-fail group-hover:bg-fail-soft">
-              <Play className="size-2 fill-current" aria-hidden />
-            </span>
-            Watch the demo
-          </button>
+          <span aria-hidden className="hidden h-3 w-px bg-line-strong sm:inline-block" />
+          <span>Free in beta · Public pages only · Nothing is bought</span>
         </div>
       )}
-      {secondary && <p className="mt-3 text-[13px] text-muted">Free in beta · Public pages only · Nothing is bought</p>}
     </div>
   );
 }
