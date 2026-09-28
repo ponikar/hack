@@ -1,5 +1,6 @@
 "use client";
 
+import { DEMO_STORE_BROKEN } from "@/lib/demo";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -129,7 +130,7 @@ function NewAuditForm() {
       </div>
       <p className="mt-2 text-xs text-muted">
         Live stores stop at the payment step. Nothing is bought.{" "}
-        <button type="button" className="text-accent hover:underline" onClick={() => setUrl("http://localhost:3000/store?mode=broken")}>
+        <button type="button" className="text-accent hover:underline" onClick={() => setUrl(DEMO_STORE_BROKEN)}>
           Try the demo store
         </button>
       </p>

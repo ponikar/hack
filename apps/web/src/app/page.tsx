@@ -1,3 +1,4 @@
+import { DEMO_STORE_BROKEN } from "@/lib/demo";
 import Link from "next/link";
 import { Braces, FileCode2, Lock, MessageSquareWarning, ShieldAlert, Bot, Radar, MousePointerClick, Wrench } from "lucide-react";
 import { Nav, Logo } from "@/components/marketing/nav";
@@ -187,7 +188,7 @@ export default function Home() {
             </div>
             <p className="mt-3 text-sm text-muted">
               No store yet?{" "}
-              <Link href="/dashboard/new?url=http://localhost:3000/store?mode=broken" className="text-accent hover:underline">
+              <Link href={`/dashboard/new?url=${encodeURIComponent(DEMO_STORE_BROKEN)}`} className="text-accent hover:underline">
                 Audit the demo store
               </Link>{" "}
               and watch it fail.

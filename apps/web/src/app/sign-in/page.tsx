@@ -3,6 +3,7 @@
 import { Suspense, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { AuthShell, buttonClass, fieldClass, labelClass } from "@/components/auth/auth-shell";
 import { signIn } from "@/lib/auth-client";
 
 function safeNext(next: string | null) {
@@ -40,28 +41,27 @@ function SignInForm() {
   }
 
   return (
-    <main className="mx-auto max-w-sm p-8 space-y-6">
-      <h1 className="text-2xl font-semibold">Sign in</h1>
+    <AuthShell title="Welcome back" subtitle="Sign in to see your audits.">
       <form onSubmit={onSubmit} className="space-y-4">
         <label className="block space-y-1">
-          <span className="text-sm">Email</span>
-          <input name="email" type="email" required autoComplete="email" className="w-full rounded border px-3 py-2" />
+          <span className={labelClass}>Email</span>
+          <input name="email" type="email" required autoComplete="email" className={fieldClass} />
         </label>
         <label className="block space-y-1">
-          <span className="text-sm">Password</span>
-          <input name="password" type="password" required autoComplete="current-password" className="w-full rounded border px-3 py-2" />
+          <span className={labelClass}>Password</span>
+          <input name="password" type="password" required autoComplete="current-password" className={fieldClass} />
         </label>
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button type="submit" disabled={pending} className="w-full rounded bg-black px-3 py-2 text-white disabled:opacity-50">
+        {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+        <button type="submit" disabled={pending} className={buttonClass}>
           {pending ? "Signing in..." : "Sign in"}
         </button>
       </form>
-      <p className="text-sm">
+      <p className="mt-4 text-sm text-[var(--muted)]">
         No account?{" "}
-        <Link className="underline" href={`/sign-up?next=${encodeURIComponent(next)}`}>
+        <Link className="font-medium text-[var(--accent)] hover:underline" href={`/sign-up?next=${encodeURIComponent(next)}`}>
           Get started
         </Link>
       </p>
-    </main>
+    </AuthShell>
   );
 }

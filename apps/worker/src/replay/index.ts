@@ -7,6 +7,9 @@ import { checkHtml, checkPage } from "./expect";
 import { BLOCKER_TEXT, detectBlocker, tryDismiss } from "./blockers";
 import { fastPath } from "./fastpath";
 import { llmAct, llmAvailable } from "./llmact";
+import { PERSONAS } from "../sessions/personas";
+
+const personaLabel = (id: string) => PERSONAS.find((p) => p.id === id)?.label ?? id;
 
 const GPTBOT_UA = "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.4; +https://openai.com/gptbot";
 const SCREENSHOT_ROOT = process.env.SCREENSHOT_DIR ?? path.resolve(process.cwd(), "../web/public/screenshots");
@@ -26,11 +29,12 @@ async function shot(page: Page, runId: string, sessionId: string, i: number) {
 function finish(session: Session, steps: StepResult[], t0: number): SessionResult {
   const failed = steps.find((s) => s.status === "failed" || s.status === "blocked");
   const status = failed ? (failed.status === "blocked" ? "blocked" : "fail") : "pass";
+  const who = personaLabel(session.persona);
   const summary = failed
-    ? `${session.persona}: died at "${failed.label}". ${failed.reason ?? ""}`.trim()
+    ? `${who} died at "${failed.label}". ${failed.reason ?? ""}`.trim()
     : session.liveStore && session.archetype === "browser-agent"
-      ? `${session.persona}: reached the payment gate.`
-      : `${session.persona}: completed.`;
+      ? `${who} reached the payment gate.`
+      : `${who} completed the journey.`;
   return { sessionId: session.id, persona: session.persona, archetype: session.archetype, template: session.template, goal: session.goal, status, failedStep: failed?.index, summary, steps, durationMs: Date.now() - t0 };
 }
 
