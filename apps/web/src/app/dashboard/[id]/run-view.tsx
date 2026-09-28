@@ -17,8 +17,11 @@ import { SignedOut } from "@/components/run/signed-out";
 
 const isActive = (r: Run | null) => !r || r.status === "queued" || r.status === "profiling" || r.status === "running";
 
-export function RunView({ id }: { id: string }) {
-  const { data: run, error, loading } = usePolled<Run>(`/api/runs/${id}`, 2000, isActive);
+type Back = { href: string; label: string };
+const DASHBOARD_BACK: Back = { href: "/dashboard", label: "All audits" };
+
+export function RunView({ id, endpoint, back = DASHBOARD_BACK }: { id: string; endpoint?: string; back?: Back }) {
+  const { data: run, error, loading } = usePolled<Run>(endpoint ?? `/api/runs/${id}`, 2000, isActive);
   const [selected, setSelected] = useState<StepRef | null>(null);
   const close = useCallback(() => setSelected(null), []);
 
@@ -31,18 +34,18 @@ export function RunView({ id }: { id: string }) {
 
   if (error === "unauthorized") {
     return (
-      <Shell>
+      <Shell back={back}>
         <SignedOut what="this audit" />
       </Shell>
     );
   }
   if (error === "not-found") {
     return (
-      <Shell>
+      <Shell back={back}>
         <div className="rounded-lg border border-line p-6 text-sm">
           No audit with this id.{" "}
-          <Link href="/dashboard" className="text-accent hover:underline">
-            Back to audits
+          <Link href={back.href} className="text-accent hover:underline">
+            {back.label}
           </Link>
         </div>
       </Shell>
@@ -50,7 +53,7 @@ export function RunView({ id }: { id: string }) {
   }
   if (loading || !run) {
     return (
-      <Shell>
+      <Shell back={back}>
         {error === "network" ? (
           <p className="text-sm text-fail">Could not load this audit. Retrying.</p>
         ) : (
@@ -71,7 +74,7 @@ export function RunView({ id }: { id: string }) {
   const results = new Map((run.results ?? []).map((r) => [r.sessionId, r]));
 
   return (
-    <Shell wide={Boolean(selectedStep)}>
+    <Shell wide={Boolean(selectedStep)} back={back}>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
@@ -154,12 +157,12 @@ export function RunView({ id }: { id: string }) {
   );
 }
 
-function Shell({ children, wide }: { children: React.ReactNode; wide?: boolean }) {
+function Shell({ children, wide, back }: { children: React.ReactNode; wide?: boolean; back: Back }) {
   return (
     <main className={`mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8 ${wide ? "lg:pr-[420px]" : ""}`}>
-      <Link href="/dashboard" className="inline-flex items-center gap-1 text-sm text-muted hover:text-ink">
+      <Link href={back.href} className="inline-flex items-center gap-1 text-sm text-muted hover:text-ink">
         <ArrowLeft className="size-3.5" aria-hidden />
-        All audits
+        {back.label}
       </Link>
       <div className="mt-4">{children}</div>
     </main>

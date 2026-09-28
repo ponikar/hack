@@ -23,8 +23,12 @@ const ITEMS = [
     a: "Shopify, WooCommerce, BigCommerce, Magento and custom storefronts. Platform is detected from headers and markup and shapes the journeys.",
   },
   {
-    q: "Is it free?",
-    a: "Free during beta. Run as many audits as you like; the only limit is one run per store at a time.",
+    q: "Is this safe to run on a live store?",
+    a: "Yes. Browser agents stop at the payment step and never place an order. Feed readers only fetch public pages. Only our own demo store completes checkout, with a test card.",
+  },
+  {
+    q: "How is this different from Shopify's or Cloudflare's readiness score?",
+    a: "Those tools score what your HTML declares: schema, robots.txt, feeds. Watchdog also opens your store in a real browser as each buyer, adds to cart, and goes to checkout. A store can score 90 and still block every agent at a login wall. That step is what we show you, with a screenshot.",
   },
 ];
 

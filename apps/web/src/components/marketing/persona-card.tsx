@@ -4,7 +4,7 @@ import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } fro
 import { Monogram } from "./audit-rows";
 import { item, useGlow } from "./motion";
 
-export type Persona = { name: string; vendor: string; since: string; buys: string; kills: string };
+export type Persona = { name: string; vendor: string; since?: string; buys: string; kills: string };
 
 export function PersonaCard({ p }: { p: Persona }) {
   const reduce = useReducedMotion();
@@ -35,7 +35,8 @@ export function PersonaCard({ p }: { p: Persona }) {
         <div className="min-w-0">
           <div className="truncate text-[15px] font-semibold tracking-tight">{p.name}</div>
           <div className="text-[12px] text-muted">
-            {p.vendor}, {p.since}
+            {p.vendor}
+            {p.since && `, ${p.since}`}
           </div>
         </div>
       </div>

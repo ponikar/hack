@@ -7,10 +7,7 @@ import {
   FileCode,
   KeyRound,
   MessageSquareWarning,
-  Rss,
   ShieldAlert,
-  ShieldBan,
-  TextCursorInput,
   X,
 } from "lucide-react";
 import { Counter, GlowCard, Item, Reveal, Stagger } from "./motion";
@@ -48,6 +45,33 @@ const PROOF: { claim: string; source: string; href: string }[] = [
   { claim: "Amazon Buy for Me grew from 65,000 to 500,000+ items in 2025.", source: "Amazon", href: "https://www.aboutamazon.com/news/retail/amazon-shopping-app-buy-for-me-brands" },
 ];
 
+const TECHCRUNCH = "https://techcrunch.com/2026/04/16/ai-traffic-to-us-retailers-rose-393-in-q1-and-its-boosting-their-revenue-too/";
+
+const FACTS: { stat: string; text: string; source: string; href: string }[] = [
+  { stat: "393%", text: "growth in AI-referred traffic to US retailers, Q1 2026", source: "TechCrunch", href: TECHCRUNCH },
+  { stat: "42%", text: "better conversion than search traffic", source: "TechCrunch", href: TECHCRUNCH },
+  { stat: "~13x", text: "more AI-referred orders on Shopify, Q1 2026", source: "Shopify", href: "https://www.shopify.com/blog/how-agentic-commerce-works" },
+];
+
+export function ProofFacts() {
+  return (
+    <div className="border-t border-line">
+      <Stagger as="ul" className="mx-auto grid max-w-6xl gap-px px-4 py-10 sm:grid-cols-3 sm:px-6">
+        {FACTS.map((f) => (
+          <Item key={f.stat} as="li" className="flex flex-col gap-1 py-3 sm:px-6 sm:first:pl-0 sm:last:pr-0 sm:[&:not(:first-child)]:border-l sm:[&:not(:first-child)]:border-line">
+            <span className="text-[40px] font-semibold leading-none tracking-[-0.04em] tabular-nums sm:text-[48px]">{f.stat}</span>
+            <span className="mt-1 text-[14px] leading-snug text-ink-2">{f.text}</span>
+            <a href={f.href} target="_blank" rel="noreferrer" className="mt-1 inline-flex w-fit items-center gap-1 text-[12px] text-muted underline-offset-2 hover:text-ink hover:underline">
+              {f.source}
+              <ArrowUpRight className="size-3" aria-hidden />
+            </a>
+          </Item>
+        ))}
+      </Stagger>
+    </div>
+  );
+}
+
 export function ProofStrip() {
   const list = [...PROOF, ...PROOF];
   return (
@@ -73,12 +97,12 @@ export function HowItWorks() {
   return (
     <Section id="how">
       <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
-        <Heading title="One URL in. A fix list out." />
+        <Heading title="One URL in. Seven journeys out." />
         <Reveal delay={0.1} className="flex gap-8 sm:gap-12">
           {[
             { n: 8, label: "HTTP probes" },
             { n: 7, label: "AI buyers" },
-            { n: 0, label: "purchases made" },
+            { n: 1, label: "screenshot per failure" },
           ].map((s) => (
             <div key={s.label}>
               <Counter to={s.n} className="block text-[40px] font-semibold leading-none tracking-[-0.04em] tabular-nums sm:text-[52px]" />
@@ -99,6 +123,18 @@ export function HowItWorks() {
           <FixArt />
         </Step>
       </Stagger>
+
+      <Reveal delay={0.1} className="mt-8 flex flex-wrap items-baseline gap-x-3 gap-y-2 text-[14px]">
+        <span className="font-semibold tracking-tight">What you get</span>
+        <ul className="flex flex-wrap items-baseline gap-x-3 gap-y-2 text-ink-2">
+          {["per-buyer journey", "screenshot of the failing step", "plain-English reason", "fix list grouped by buyer"].map((t, i) => (
+            <li key={t} className="flex items-baseline gap-3">
+              {i > 0 && <span className="text-line-strong" aria-hidden>·</span>}
+              {t}
+            </li>
+          ))}
+        </ul>
+      </Reveal>
     </Section>
   );
 }
@@ -190,7 +226,7 @@ function FixArt() {
 
 const FEED_READERS: Persona[] = [
   { name: "ChatGPT Shopping", vendor: "OpenAI", since: "Sep 2025", buys: "Reads your feed and product page, then Instant Checkout over the Agentic Commerce Protocol.", kills: "Price only after JavaScript. No feed or Product JSON-LD. GPTBot blocked." },
-  { name: "Grok", vendor: "xAI", since: "Aug 2026", buys: "Fetches product pages; Grok Bot pays with a single-use Stripe card.", kills: "Empty server HTML. robots.txt disallow. 403 from the WAF." },
+  { name: "Grok", vendor: "xAI", buys: "Fetches product pages; Grok Bot pays with a single-use Stripe card.", kills: "Empty server HTML. robots.txt disallow. 403 from the WAF." },
   { name: "Perplexity search", vendor: "Perplexity", since: "Nov 2025", buys: "Answers from crawled pages, then Instant Buy through PayPal.", kills: "PerplexityBot disallowed. Challenge page instead of HTML." },
   { name: "Google AI Mode", vendor: "Google", since: "Jan 2026", buys: "Merchant Center data and UCP checkout inside AI Mode.", kills: "Missing Product schema. Variants and stock not machine-readable." },
 ];
@@ -204,7 +240,7 @@ const BROWSER_AGENTS: Persona[] = [
 export function Buyers() {
   return (
     <Section id="buyers" className="border-t border-line bg-surface/50">
-      <Heading title="Seven buyers. Two ways of shopping." lead="Feed readers fetch your pages once, with JavaScript off. Browser agents drive a real browser to the payment step." />
+      <Heading title="Who is already buying this way" lead="Feed readers fetch your pages once, JavaScript off. Browser agents drive Chromium to the payment step." />
       <div className="mt-12 grid gap-10">
         <Group title="Feed readers" hint="Die before the cart" people={FEED_READERS} cols="lg:grid-cols-4" />
         <Group title="Browser agents" hint="Die at checkout" people={BROWSER_AGENTS} cols="lg:grid-cols-3" />
@@ -231,20 +267,17 @@ function Group({ title, hint, people, cols }: { title: string; hint: string; peo
 
 const KILLERS = [
   { icon: FileCode, title: "JavaScript-only rendering", check: "Seen", body: "Price and stock exist only after hydration. The feed reader sees an empty shell and moves on." },
-  { icon: Braces, title: "No Product JSON-LD", check: "Listed", body: "Nothing machine-readable to list. Your product is not in the answer, so it cannot be bought." },
-  { icon: Rss, title: "No product feed", check: "Listed", body: "No products.json, no Merchant Center, no ACP feed. Shopping surfaces index competitors instead." },
-  { icon: Ban, title: "robots.txt block", check: "Seen", body: "Disallow GPTBot or PerplexityBot and those assistants never learn the store exists." },
-  { icon: ShieldBan, title: "WAF challenge", check: "Seen", body: "The crawler receives a 403 or an interstitial instead of HTML. Every page reads as blank." },
+  { icon: Braces, title: "No Product JSON-LD or feed", check: "Listed", body: "No schema, no products.json, no Merchant Center or ACP feed. Nothing machine-readable to list, so shopping surfaces index competitors instead." },
+  { icon: Ban, title: "robots.txt / bot protection", check: "Seen", body: "Disallow GPTBot or PerplexityBot, or let the WAF answer with a 403 or an interstitial, and the store reads as blank to those assistants." },
   { icon: ShieldAlert, title: "CAPTCHA", check: "Buyable", body: "The agent reaches checkout and is asked to prove it is human. It cannot. The session ends there." },
-  { icon: MessageSquareWarning, title: "Popup", check: "Buyable", body: "A newsletter or consent modal sits over Add to cart. Clicks hit the overlay and nothing happens." },
+  { icon: MessageSquareWarning, title: "Popups and forms", check: "Buyable", body: "A modal sits over Add to cart. A required field has no label, a postcode is rejected, a button stays disabled. The agent retries, then quits." },
   { icon: KeyRound, title: "Login wall", check: "Buyable", body: "Checkout demands an account. Agents shop as guests, so the sale dies one step from payment." },
-  { icon: TextCursorInput, title: "Broken form", check: "Buyable", body: "A required field with no label, a rejected postcode, a disabled button. The agent retries, then quits." },
 ];
 
 export function Killers() {
   return (
     <Section id="killers" className="border-t border-line">
-      <Heading title="Where the sale dies" lead="Nine things a human shopper walks past. Each one is a check in the audit and a line in the fix list." />
+      <Heading title="Where the sale dies" lead="Six things a human shopper walks past. Each one is a check in the audit and a line in the fix list." />
       <Stagger as="ul" className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
         {KILLERS.map((k) => (
           <Item key={k.title} as="li" className="group bg-surface p-5 transition-colors hover:bg-bg">
@@ -274,6 +307,7 @@ const COMPARE: { row: string; checklist: boolean; watchdog: boolean }[] = [
   { row: "Guest checkout reachable in a real browser", checklist: false, watchdog: true },
   { row: "CAPTCHA or challenge at checkout", checklist: false, watchdog: true },
   { row: "Screenshot of the step that failed", checklist: false, watchdog: true },
+  { row: "Runs on your live theme, not your markup", checklist: false, watchdog: true },
 ];
 
 const SHOPIFY_FACTS = [
@@ -287,7 +321,7 @@ export function Shopify() {
     <Section id="shopify" className="border-t border-line bg-surface/50">
       <div className="grid gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
         <div>
-          <Heading title="Built for Shopify stores" lead="Shopify made every store agent-ready by default. Whether an agent can actually finish the journey on your theme is the part nobody checks." />
+          <Heading title="Shopify's checker says you pass. Can an agent finish checkout?" lead="Shopify's readiness scanner reads your markup. Watchdog drives your live theme as each buyer and records where it stops." />
           <Reveal delay={0.1}>
             <ol className="mt-8 divide-y divide-line border-y border-line">
               {SHOPIFY_FACTS.map((f) => (
@@ -346,7 +380,7 @@ export function FinalCta() {
     <section className="border-t border-line">
       <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6 sm:py-32">
         <Reveal className="max-w-2xl">
-          <h2 className="text-[36px] font-semibold leading-[1.02] tracking-[-0.035em] sm:text-[56px]">Find out where AI buyers give up on your store.</h2>
+          <h2 className="text-[36px] font-semibold leading-[1.02] tracking-[-0.035em] sm:text-[56px]">See where AI buyers stop on your store.</h2>
           <div className="mt-8">
             <UrlForm secondary />
           </div>
@@ -371,6 +405,7 @@ export function Footer() {
           <Logo />
           <span className="text-muted">An AI mystery shopper for your store.</span>
         </div>
+        <p className="text-muted">Free during beta. Paid monitoring later.</p>
         <nav className="flex flex-wrap gap-x-5 gap-y-2 text-ink-2" aria-label="Footer">
           <Link href="/dashboard" className="transition-colors hover:text-ink">
             Dashboard

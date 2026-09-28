@@ -4,7 +4,7 @@ import { LiveAudit } from "@/components/marketing/live-audit";
 import { BrokenFixed } from "@/components/marketing/broken-fixed";
 import { Faq } from "@/components/marketing/faq";
 import { Reveal } from "@/components/marketing/motion";
-import { Buyers, FinalCta, Footer, Heading, HowItWorks, Killers, ProofStrip, Section, Shopify } from "@/components/marketing/sections";
+import { Buyers, FinalCta, Footer, Heading, HowItWorks, Killers, ProofFacts, ProofStrip, Section, Shopify } from "@/components/marketing/sections";
 
 export default function Home() {
   return (
@@ -12,7 +12,7 @@ export default function Home() {
       <Nav />
 
       <main className="flex-1">
-        <section className="relative overflow-hidden">
+        <section id="audit" className="relative scroll-mt-14 overflow-hidden">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 h-[520px] [background:radial-gradient(60%_50%_at_70%_0%,var(--glow),transparent_70%)]"
@@ -21,12 +21,12 @@ export default function Home() {
             <div className="max-w-xl">
               <Reveal y={12}>
                 <h1 className="text-[44px] font-semibold leading-[0.98] tracking-[-0.04em] text-balance sm:text-[64px] lg:text-[68px]">
-                  See where AI buyers give up.
+                  Watch AI buyers try to buy from your store.
                 </h1>
               </Reveal>
               <Reveal delay={0.08} y={12}>
                 <p className="mt-6 max-w-md text-[17px] leading-relaxed text-ink-2 sm:text-[19px]">
-                  Watchdog shops your store as ChatGPT, Perplexity, Grok, Google and Amazon do, and shows the exact step each one dies on.
+                  Watchdog shops your store as ChatGPT, Perplexity, Grok, Google and Amazon do, in a real browser, and screenshots the step where each one stops.
                 </p>
               </Reveal>
               <Reveal delay={0.16} y={12} className="mt-8">
@@ -38,6 +38,8 @@ export default function Home() {
             </Reveal>
           </div>
         </section>
+
+        <ProofFacts />
 
         <ProofStrip />
 
