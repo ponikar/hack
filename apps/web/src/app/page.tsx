@@ -26,7 +26,7 @@ export default function Home() {
               </Reveal>
               <Reveal delay={0.08} y={12}>
                 <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-ink-2 sm:text-[19px]">
-                  Seven AI buyers shop your store in a real browser. See the step where each one stops.
+                  Seven AI buyers shop your store. See where each one stops.
                 </p>
               </Reveal>
               <Reveal delay={0.16} y={12} className="mt-8 flex w-full justify-center">
@@ -46,7 +46,7 @@ export default function Home() {
         <HowItWorks />
 
         <Section id="demo" className="border-t border-line bg-surface/50">
-          <Heading title="Same buyers. Two stores." lead="The demo store ships with every mistake we found in the wild. Flip it and watch the same journeys turn buyable." />
+          <Heading title="Same buyers. Two stores." lead="Flip the store. Watch the same journeys turn buyable." />
           <Reveal delay={0.1} className="mt-10">
             <BrokenFixed />
           </Reveal>
