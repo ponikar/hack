@@ -62,6 +62,23 @@ export async function checkPage(page: Page, e: Expect): Promise<{ ok: boolean; w
   return { ok: failed.length === 0, why: failed.join("; ") };
 }
 
+const TOKEN_TEXT: Record<string, string> = {
+  jsonProducts: "no product feed",
+  jsonldProduct: "no Product schema",
+  priceVisible: "no visible price",
+  variantsVisible: "no variant options",
+};
+
+function humanToken(t: string) {
+  if (t.startsWith("text:")) return `no "${t.slice(5)}"`;
+  if (t.startsWith("urlContains:")) return `no "${t.slice(12)}" in the URL`;
+  return TOKEN_TEXT[t] ?? `no ${t}`;
+}
+
+function joinHuman(xs: string[]) {
+  return xs.length <= 1 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`;
+}
+
 export function checkHtml(html: string, e: Expect, url: string): { ok: boolean; why: string } {
   const $ = cheerio.load(html);
   $("script, style, noscript").remove();
@@ -76,7 +93,7 @@ export function checkHtml(html: string, e: Expect, url: string): { ok: boolean; 
     return false;
   };
   const fails: string[] = [];
-  if (e.text && !textMatch(text, e.text)) fails.push(`raw HTML lacks "${e.text}"`);
-  if (e.anyOf?.length && !e.anyOf.some(tok)) fails.push(`raw HTML has none of ${e.anyOf.join(" | ")}`);
-  return { ok: fails.length === 0, why: fails.join("; ") };
+  if (e.text && !textMatch(text, e.text)) fails.push(`the product name "${e.text}" is missing from the HTML`);
+  if (e.anyOf?.length && !e.anyOf.some(tok)) fails.push(`the HTML has ${joinHuman(e.anyOf.map(humanToken))}`);
+  return { ok: fails.length === 0, why: fails.join(" and ") };
 }

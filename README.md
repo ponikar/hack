@@ -1,60 +1,51 @@
 # AI Buyer Watchdog
 
-Uptime monitoring, but for AI buyers. See the PRD PDF in this folder.
+Uptime monitoring, but for AI buyers. Enter a store URL. The engine profiles the store, replays the shopping journeys real AI buyers attempt, and shows the exact step where each one dies plus a plain-English fix list.
 
 ## Layout
 
-- `apps/web` Next.js: dashboard (`/dashboard`), demo store (`/store?mode=broken|fixed`), API (`/api/runs`)
-- `apps/worker` Node process: Playwright + Grok agent, Seen check, Listed check. Pulls jobs from pg-boss.
-- `packages/shared` zod schemas: the shared JSON result format (`RunResult`) and the queue job
-- `packages/db` Drizzle + Postgres (`runs` table)
+- `apps/web` Next.js: landing page, auth, dashboard, demo store (`/store?mode=broken|fixed`), API
+- `apps/worker` Node: queue consumer running the engine
+  - `profile/` step 1, store profile from 8 parallel HTTP probes
+  - `sessions/` step 2, personas × journey templates
+  - `replay/` step 3, feed fetch checks and Chromium fast-path actions with blocker detection
+  - `verdicts.ts` step 4, Seen / Listed / Buyable and the fix list
+- `packages/shared` zod schemas shared by web and worker
+- `packages/db` Drizzle + Postgres
 
-## Run
+Design: `docs/harness.md`, `docs/engine.md`.
+
+## Run locally
 
 ```sh
-cp .env.example .env        # add XAI_API_KEY
+cp .env.example .env        # optional: XAI_API_KEY for the Grok fallback
 pnpm setup                  # install, chromium, docker postgres, schema
 pnpm dev                    # web on :3000 + worker
 ```
 
-Postgres runs on **5433** (5432 is taken by local Homebrew Postgres).
+Postgres runs in Docker on port **5436**.
 
-One-off audit without the queue:
+## CLI
 
 ```sh
-pnpm --filter worker run:once http://localhost:3000/store?mode=broken broken
-pnpm --filter worker run:once http://localhost:3000/store?mode=fixed fixed --test-checkout
+pnpm --filter worker profile:store  https://www.allbirds.com
+pnpm --filter worker sessions:store https://www.allbirds.com
+pnpm --filter worker replay:store   "http://localhost:3000/store?mode=broken"
 ```
-
-`--test-checkout` lets the agent press Place Order. Only use it on the demo store.
 
 ## Flow
 
-1. `POST /api/runs {storeUrl, mode?}` inserts a `runs` row and enqueues `audit-run`
-2. Worker runs Seen → Listed → Buyable, writing partial results to `runs.result`
-3. `/dashboard/[id]` polls `/api/runs/[id]` every 2s and renders verdicts, steps, fix list
+1. `POST /api/runs {storeUrl}` inserts a `runs` row for the signed-in user and enqueues it
+2. Worker: profile → sessions → replay (writing each session result as it lands) → verdicts
+3. Dashboard polls `/api/runs/[id]` and renders the persona timeline, screenshots, and fixes
 
-## Demo store modes
+## Safety
 
-| mode | rendering | Product JSON-LD | checkout |
-|---|---|---|---|
-| broken | client fetch only | none | newsletter popup + forced sign-in |
-| fixed | SSR | present | guest form, test card |
+- Browser sessions never press Place Order on a live store. Only the demo store (`localhost` or `DEMO_STORE_URL`) completes checkout, with test card 4242.
+- Grok is optional. Without a key the replay uses deterministic actions only.
 
-## Store profile (step 1 of the engine)
+## Hosting
 
-```sh
-pnpm --filter worker profile:store https://www.allbirds.com
-```
-
-Eight parallel HTTP probes, no browser, ~1-5s. Output is a `StoreProfile` (see `packages/shared`). Design in `docs/engine.md`.
-
-## Sessions and replay (engine steps 2 and 3)
-
-```sh
-pnpm --filter worker sessions:store https://www.allbirds.com   # profile → sessions JSON
-pnpm --filter worker replay:store  https://www.allbirds.com   # profile → sessions → replay, one line per persona
-pnpm --filter worker replay:store  "http://localhost:3000/store?mode=broken"
-```
-
-Feed-reader personas fetch without JavaScript. Browser-agent personas drive Chromium with deterministic fast-path actions, Grok only when a key is set. Screenshots land in `apps/web/public/screenshots/<runId>/`.
+- Web: any Next.js host. Set `DATABASE_URL`, `BETTER_AUTH_SECRET`, `NEXT_PUBLIC_APP_URL`.
+- Worker: `docker build -f apps/worker/Dockerfile .` (Playwright base image). Needs the same `DATABASE_URL` and a shared or object-storage path for `SCREENSHOT_DIR`.
+- Postgres: any managed instance. The worker uses pg-boss on the same database, so no queue service is needed.
