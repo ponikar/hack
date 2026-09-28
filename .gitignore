@@ -8,3 +8,4 @@ dist
 apps/worker/screenshots
 .claude/
 apps/web/public/screenshots
+.vercel
