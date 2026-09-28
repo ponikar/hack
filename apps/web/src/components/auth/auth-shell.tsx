@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Logo } from "@/components/marketing/nav";
 
 export function AuthShell({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
@@ -6,9 +5,7 @@ export function AuthShell({ title, subtitle, children }: { title: string; subtit
     <main className="min-h-screen px-4 py-10 sm:py-16">
       <div className="mx-auto w-full max-w-sm">
         <div className="mb-8 flex justify-center">
-          <Link href="/" aria-label="Watchdog home">
-            <Logo />
-          </Link>
+          <Logo />
         </div>
         <div className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/[0.03] sm:p-8">
           <h1 className="text-xl font-semibold tracking-tight">{title}</h1>
