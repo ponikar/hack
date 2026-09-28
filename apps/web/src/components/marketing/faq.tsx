@@ -8,27 +8,27 @@ import { EASE } from "./motion";
 const ITEMS = [
   {
     q: "Is anything bought?",
-    a: "No. Browser agents stop at the payment step of a live store and the run is marked stopped, never paid. Feed readers only fetch pages.",
+    a: "No. Live stores stop at the payment step. Feed readers only fetch pages.",
   },
   {
     q: "Do I need to install anything?",
-    a: "No. Paste a public store URL. Watchdog runs the probes and the browser replays from its own infrastructure.",
+    a: "No. Paste a public URL.",
   },
   {
     q: "What about bot protection?",
-    a: "If Cloudflare, DataDome, a CAPTCHA or a WAF stops the agent, that is the finding: the exact step, the screenshot and the vendor. Watchdog does not bypass it.",
+    a: "If a WAF or CAPTCHA stops the agent, that is the finding. We do not bypass it.",
   },
   {
     q: "Which stores?",
-    a: "Shopify, WooCommerce, BigCommerce, Magento and custom storefronts. Platform is detected from headers and markup and shapes the journeys.",
+    a: "Shopify, WooCommerce, BigCommerce, Magento and custom stores.",
   },
   {
     q: "Is this safe to run on a live store?",
-    a: "Yes. Browser agents stop at the payment step and never place an order. Feed readers only fetch public pages. Only our own demo store completes checkout, with a test card.",
+    a: "Yes. No order is ever placed. Only our demo store completes checkout, with a test card.",
   },
   {
     q: "How is this different from Shopify's or Cloudflare's readiness score?",
-    a: "Those tools score what your HTML declares: schema, robots.txt, feeds. Watchdog also opens your store in a real browser as each buyer, adds to cart, and goes to checkout. A store can score 90 and still block every agent at a login wall. That step is what we show you, with a screenshot.",
+    a: "They score your HTML. Watchdog also opens a browser, adds to cart and goes to checkout. A 90 score can still hit a login wall.",
   },
 ];
 

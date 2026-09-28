@@ -89,7 +89,7 @@ export const BROKEN_BUYERS: MockBuyer[] = [
 export const BROKEN_FIXES: MockFix[] = [
   {
     title: "Turn on guest checkout",
-    detail: "Checkout redirected to /account/login. Agents never create accounts; one step from payment, the sale ends.",
+    detail: "Checkout demanded an account. Agents shop as guests.",
     who: ["ChatGPT Atlas"],
   },
 ];
@@ -199,7 +199,7 @@ export const TOGGLE_FIXED_BUYERS: MockBuyer[] = [
 ];
 
 export const TOGGLE_BROKEN_FIXES: MockFix[] = [
-  { title: "Render price and stock on the server", detail: "Feed readers fetch once, without JavaScript. Put price, availability and variants in the HTML.", who: ["ChatGPT Shopping", "Grok", "Google AI Mode"] },
+  { title: "Render price and stock on the server", detail: "Put price, stock and variants in the HTML.", who: ["ChatGPT Shopping", "Grok", "Google AI Mode"] },
   { title: "Allow AI crawlers in robots.txt", detail: "Unblock PerplexityBot, OAI-SearchBot and GPTBot for /products/ and /collections/.", who: ["Perplexity search", "ChatGPT Shopping"] },
   { title: "Give the newsletter modal a close button", detail: "Or delay it until after the first click. Agents cannot escape a modal with no control.", who: ["ChatGPT Atlas"] },
   { title: "Skip the checkout CAPTCHA for signed agents", detail: "Allowlist Web Bot Auth signatures or move the challenge behind risk scoring.", who: ["Perplexity Comet"] },

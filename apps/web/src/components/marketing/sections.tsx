@@ -37,20 +37,17 @@ const PROOF: { claim: string; source: string; href: string }[] = [
   { claim: "None of the major AI crawlers execute JavaScript.", source: "Vercel, Dec 2024", href: "https://vercel.com/blog/the-rise-of-the-ai-crawler" },
   { claim: "GPT-5 solved 28% of CAPTCHAs. The best model, 60%.", source: "Proof of Human research", href: "https://research.poh.org/captcha-benchmarking/" },
   { claim: "Every Shopify store serves /agents.md and /llms.txt.", source: "Shopify changelog, 28 May 2026", href: "https://shopify.dev/changelog/customize-llmstxt-llms-fulltxt-and-agentsmd" },
-  { claim: "Unsigned agents get Shopify's strictest rate limits.", source: "Shopify changelog, 7 May 2026", href: "https://shopify.dev/changelog/bots-and-agents-should-identify-themselves-via-web-bot-auth" },
   { claim: "Shop Pay checkout is on by default for agents.", source: "Shopify docs, 21 Sep 2026", href: "https://shopify.dev/docs/agents/checkout" },
-  { claim: "UCP launched at NRF with Google, Shopify, Walmart and Target.", source: "Shopify Engineering, 11 Jan 2026", href: "https://shopify.engineering/UCP" },
   { claim: "ChatGPT Instant Checkout runs on the Agentic Commerce Protocol.", source: "Stripe, 29 Sep 2025", href: "https://stripe.com/newsroom/news/stripe-openai-instant-checkout" },
-  { claim: "Perplexity Instant Buy pays through PayPal.", source: "PayPal, 25 Nov 2025", href: "https://newsroom.paypal-corp.com/2025-11-PayPal-and-Perplexity-Launch-Instant-Buy" },
   { claim: "Amazon Buy for Me grew from 65,000 to 500,000+ items in 2025.", source: "Amazon", href: "https://www.aboutamazon.com/news/retail/amazon-shopping-app-buy-for-me-brands" },
 ];
 
 const TECHCRUNCH = "https://techcrunch.com/2026/04/16/ai-traffic-to-us-retailers-rose-393-in-q1-and-its-boosting-their-revenue-too/";
 
 const FACTS: { stat: string; text: string; source: string; href: string }[] = [
-  { stat: "393%", text: "growth in AI-referred traffic to US retailers, Q1 2026", source: "TechCrunch", href: TECHCRUNCH },
-  { stat: "42%", text: "better conversion than search traffic", source: "TechCrunch", href: TECHCRUNCH },
-  { stat: "~13x", text: "more AI-referred orders on Shopify, Q1 2026", source: "Shopify", href: "https://www.shopify.com/blog/how-agentic-commerce-works" },
+  { stat: "393%", text: "more AI-referred retail traffic, Q1 2026", source: "TechCrunch", href: TECHCRUNCH },
+  { stat: "42%", text: "higher conversion than search", source: "TechCrunch", href: TECHCRUNCH },
+  { stat: "~13x", text: "more AI-referred orders on Shopify", source: "Shopify", href: "https://www.shopify.com/blog/how-agentic-commerce-works" },
 ];
 
 export function ProofFacts() {
@@ -113,28 +110,17 @@ export function HowItWorks() {
       </div>
 
       <Stagger as="ol" className="mt-14 grid gap-4 md:grid-cols-3">
-        <Step n={1} title="Profile" time="~8s" body="Eight probes read the store like a crawler: platform, rendering, schema, feed, robots.txt, bot protection, cart, checkout.">
+        <Step n={1} title="Profile" time="~8s" body="Eight probes: platform, rendering, schema, feed, robots, bot protection, checkout.">
           <ProbeArt />
         </Step>
-        <Step n={2} title="Replay" time="under 2 min" body="Each buyer gets the journey it would attempt. Feed readers fetch without JavaScript. Browser agents drive a real Chromium.">
+        <Step n={2} title="Replay" time="under 2 min" body="Each buyer runs its own journey in a real browser.">
           <ReplayArt />
         </Step>
-        <Step n={3} title="Fix" time="you" body="The exact failing step, its screenshot, the plain-English reason, and what unblocks which buyer.">
+        <Step n={3} title="Fix" time="you" body="The failing step, its screenshot, and what unblocks each buyer.">
           <FixArt />
         </Step>
       </Stagger>
 
-      <Reveal delay={0.1} className="mt-8 flex flex-wrap items-baseline gap-x-3 gap-y-2 text-[14px]">
-        <span className="font-semibold tracking-tight">What you get</span>
-        <ul className="flex flex-wrap items-baseline gap-x-3 gap-y-2 text-ink-2">
-          {["per-buyer journey", "screenshot of the failing step", "plain-English reason", "fix list grouped by buyer"].map((t, i) => (
-            <li key={t} className="flex items-baseline gap-3">
-              {i > 0 && <span className="text-line-strong" aria-hidden>·</span>}
-              {t}
-            </li>
-          ))}
-        </ul>
-      </Reveal>
     </Section>
   );
 }
@@ -225,22 +211,22 @@ function FixArt() {
 }
 
 const FEED_READERS: Persona[] = [
-  { name: "ChatGPT Shopping", vendor: "OpenAI", since: "Sep 2025", buys: "Reads your feed and product page, then Instant Checkout over the Agentic Commerce Protocol.", kills: "Price only after JavaScript. No feed or Product JSON-LD. GPTBot blocked." },
-  { name: "Grok", vendor: "xAI", buys: "Fetches product pages; Grok Bot pays with a single-use Stripe card.", kills: "Empty server HTML. robots.txt disallow. 403 from the WAF." },
-  { name: "Perplexity search", vendor: "Perplexity", since: "Nov 2025", buys: "Answers from crawled pages, then Instant Buy through PayPal.", kills: "PerplexityBot disallowed. Challenge page instead of HTML." },
-  { name: "Google AI Mode", vendor: "Google", since: "Jan 2026", buys: "Merchant Center data and UCP checkout inside AI Mode.", kills: "Missing Product schema. Variants and stock not machine-readable." },
+  { name: "ChatGPT Shopping", vendor: "OpenAI", since: "Sep 2025", buys: "Feed and product page, then Instant Checkout.", kills: "JS-only price. No feed. GPTBot blocked." },
+  { name: "Grok", vendor: "xAI", buys: "Fetches product pages, pays by single-use card.", kills: "Empty HTML. robots.txt. WAF 403." },
+  { name: "Perplexity search", vendor: "Perplexity", since: "Nov 2025", buys: "Crawled pages, then Instant Buy via PayPal.", kills: "PerplexityBot blocked. Challenge page." },
+  { name: "Google AI Mode", vendor: "Google", since: "Jan 2026", buys: "Merchant Center data, UCP checkout.", kills: "No Product schema. Stock not readable." },
 ];
 
 const BROWSER_AGENTS: Persona[] = [
-  { name: "ChatGPT Atlas", vendor: "OpenAI", since: "Oct 2025", buys: "Agent mode drives Chromium through search, cart and guest checkout.", kills: "Login wall. CAPTCHA at checkout. Modal with no close control." },
-  { name: "Perplexity Comet", vendor: "Perplexity", since: "2025", buys: "Browses like a shopper and pays with Instant Buy.", kills: "Cloudflare challenge. Newsletter popup. Add-to-cart that does nothing." },
-  { name: "Amazon Buy for Me", vendor: "Amazon", since: "Apr 2025", buys: "Buys from your site inside the Amazon app; 500k+ items by end of 2025.", kills: "Account required. CAPTCHA. Form that rejects its input." },
+  { name: "ChatGPT Atlas", vendor: "OpenAI", since: "Oct 2025", buys: "Drives Chromium: search, cart, guest checkout.", kills: "Login wall. CAPTCHA. Stuck modal." },
+  { name: "Perplexity Comet", vendor: "Perplexity", since: "2025", buys: "Browses like a shopper, pays with Instant Buy.", kills: "Cloudflare challenge. Popup. Dead Add to cart." },
+  { name: "Amazon Buy for Me", vendor: "Amazon", since: "Apr 2025", buys: "Buys from your site inside the Amazon app.", kills: "Account required. CAPTCHA. Rejected form." },
 ];
 
 export function Buyers() {
   return (
     <Section id="buyers" className="border-t border-line bg-surface/50">
-      <Heading title="Who is already buying this way" lead="Feed readers fetch your pages once, JavaScript off. Browser agents drive Chromium to the payment step." />
+      <Heading title="Who is buying this way" lead="Feed readers fetch once, no JavaScript. Browser agents drive Chromium to checkout." />
       <div className="mt-12 grid gap-10">
         <Group title="Feed readers" hint="Die before the cart" people={FEED_READERS} cols="lg:grid-cols-4" />
         <Group title="Browser agents" hint="Die at checkout" people={BROWSER_AGENTS} cols="lg:grid-cols-3" />
@@ -266,18 +252,18 @@ function Group({ title, hint, people, cols }: { title: string; hint: string; peo
 }
 
 const KILLERS = [
-  { icon: FileCode, title: "JavaScript-only rendering", check: "Seen", body: "Price and stock exist only after hydration. The feed reader sees an empty shell and moves on." },
-  { icon: Braces, title: "No Product JSON-LD or feed", check: "Listed", body: "No schema, no products.json, no Merchant Center or ACP feed. Nothing machine-readable to list, so shopping surfaces index competitors instead." },
-  { icon: Ban, title: "robots.txt / bot protection", check: "Seen", body: "Disallow GPTBot or PerplexityBot, or let the WAF answer with a 403 or an interstitial, and the store reads as blank to those assistants." },
-  { icon: ShieldAlert, title: "CAPTCHA", check: "Buyable", body: "The agent reaches checkout and is asked to prove it is human. It cannot. The session ends there." },
-  { icon: MessageSquareWarning, title: "Popups and forms", check: "Buyable", body: "A modal sits over Add to cart. A required field has no label, a postcode is rejected, a button stays disabled. The agent retries, then quits." },
-  { icon: KeyRound, title: "Login wall", check: "Buyable", body: "Checkout demands an account. Agents shop as guests, so the sale dies one step from payment." },
+  { icon: FileCode, title: "JavaScript-only rendering", check: "Seen", body: "Price appears after hydration. The fetcher sees an empty page." },
+  { icon: Braces, title: "No Product JSON-LD or feed", check: "Listed", body: "Nothing machine-readable. Shopping surfaces list a competitor." },
+  { icon: Ban, title: "robots.txt / bot protection", check: "Seen", body: "GPTBot disallowed, or a 403. The store reads as blank." },
+  { icon: ShieldAlert, title: "CAPTCHA", check: "Buyable", body: "Checkout asks for a human. The session ends." },
+  { icon: MessageSquareWarning, title: "Popups and forms", check: "Buyable", body: "A modal over Add to cart. A field with no label." },
+  { icon: KeyRound, title: "Login wall", check: "Buyable", body: "Checkout wants an account. Agents shop as guests." },
 ];
 
 export function Killers() {
   return (
     <Section id="killers" className="border-t border-line">
-      <Heading title="Where the sale dies" lead="Six things a human shopper walks past. Each one is a check in the audit and a line in the fix list." />
+      <Heading title="Where the sale dies" lead="Six checks. Six lines in your fix list." />
       <Stagger as="ul" className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
         {KILLERS.map((k) => (
           <Item key={k.title} as="li" className="group bg-surface p-5 transition-colors hover:bg-bg">
@@ -311,9 +297,9 @@ const COMPARE: { row: string; checklist: boolean; watchdog: boolean }[] = [
 ];
 
 const SHOPIFY_FACTS = [
-  { date: "28 May 2026", text: "Every store serves /agents.md, mirrored at /llms.txt. Watchdog reads it and follows the MCP endpoints it lists." },
-  { date: "30 May 2026", text: "Unsigned bots get the strictest rate limits; Web Bot Auth signatures get more. Watchdog reports which tier your store put the agent in." },
-  { date: "21 Sep 2026", text: "Shop Pay checkout is on by default for agents. Being reachable is now the only thing between an agent and your checkout." },
+  { date: "28 May 2026", text: "Every store serves /agents.md and /llms.txt. Watchdog reads them." },
+  { date: "30 May 2026", text: "Unsigned bots get the strictest rate limits. Watchdog reports your tier." },
+  { date: "21 Sep 2026", text: "Shop Pay is on by default for agents. Reachability is all that is left." },
 ];
 
 export function Shopify() {
@@ -321,7 +307,7 @@ export function Shopify() {
     <Section id="shopify" className="border-t border-line bg-surface/50">
       <div className="grid gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
         <div>
-          <Heading title="Shopify's checker says you pass. Can an agent finish checkout?" lead="Shopify's readiness scanner reads your markup. Watchdog drives your live theme as each buyer and records where it stops." />
+          <Heading title="Shopify's checker says you pass. Can an agent finish checkout?" lead="Their scanner reads markup. Watchdog drives your live theme." />
           <Reveal delay={0.1}>
             <ol className="mt-8 divide-y divide-line border-y border-line">
               {SHOPIFY_FACTS.map((f) => (
@@ -334,7 +320,7 @@ export function Shopify() {
           </Reveal>
           <Reveal delay={0.15} className="mt-8">
             <UrlForm size="md" placeholder="yourstore.myshopify.com" />
-            <p className="mt-3 text-[13px] text-muted">Also WooCommerce, BigCommerce, Magento and custom storefronts. Platform is detected from the first probe.</p>
+            <p className="mt-3 text-[13px] text-muted">Also WooCommerce, BigCommerce, Magento and custom stores.</p>
           </Reveal>
         </div>
         <Reveal delay={0.1}>
@@ -353,7 +339,6 @@ export function Shopify() {
                 </li>
               ))}
             </ul>
-            <p className="border-t border-line px-4 py-3 text-[12.5px] text-muted">A checklist reads your markup. Watchdog also drives the store as each buyer and records where it stops.</p>
           </GlowCard>
         </Reveal>
       </div>
