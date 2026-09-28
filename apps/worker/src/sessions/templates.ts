@@ -10,7 +10,10 @@ export interface TemplateParams {
 export type Template = (profile: StoreProfile, params: TemplateParams) => SessionStep[];
 
 export function isLiveStore(profile: StoreProfile): boolean {
-  return !profile.finalUrl.startsWith("http://localhost") && !profile.url.startsWith("http://localhost");
+  const demo = process.env.DEMO_STORE_URL;
+  const urls = [profile.finalUrl, profile.url];
+  if (demo && urls.some((u) => u.startsWith(demo))) return false;
+  return !urls.some((u) => u.startsWith("http://localhost"));
 }
 
 const origin = (p: StoreProfile) => new URL(p.finalUrl).origin;
