@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ArrowRight, Play } from "lucide-react";
@@ -43,21 +44,25 @@ export function UrlForm({ size = "lg", secondary = false, placeholder = "yoursto
           className={`${h} min-w-0 flex-1 rounded-lg border border-line-strong bg-surface px-3.5 font-mono text-[15px] transition-[border-color,box-shadow] placeholder:text-faint focus:border-ink focus:shadow-[0_0_0_3px_var(--accent-soft)] focus:outline-none`}
         />
         <Button type="submit" disabled={busy} className={`${h} shrink-0`}>
-          {busy ? "Starting…" : "Audit my store"}
+          {busy ? "Starting…" : "Run free audit"}
           {!busy && <ArrowRight className="size-4" aria-hidden />}
         </Button>
       </form>
       {secondary && (
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13.5px]">
-          <button type="button" onClick={watchDemo} className="group inline-flex items-center gap-1.5 font-medium text-ink transition-colors hover:text-fail">
-            <span className="grid size-5 place-items-center rounded-full border border-line-strong transition-colors group-hover:border-fail group-hover:bg-fail-soft">
-              <Play className="size-2.5 fill-current" aria-hidden />
+          <Link href="/report/demo" className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line-strong px-3.5 font-medium text-ink transition-colors hover:bg-surface">
+            See a finished report
+            <ArrowRight className="size-3.5" aria-hidden />
+          </Link>
+          <button type="button" onClick={watchDemo} className="group inline-flex items-center gap-1.5 text-[13px] text-ink-2 transition-colors hover:text-fail">
+            <span className="grid size-4 place-items-center rounded-full border border-line-strong transition-colors group-hover:border-fail group-hover:bg-fail-soft">
+              <Play className="size-2 fill-current" aria-hidden />
             </span>
             Watch the demo
           </button>
-          <span className="text-muted">Free during beta. Nothing is bought.</span>
         </div>
       )}
+      {secondary && <p className="mt-3 text-[13px] text-muted">Free in beta · Public pages only · Nothing is bought</p>}
     </div>
   );
 }
