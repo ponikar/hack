@@ -1,0 +1,24 @@
+[
+  {
+    "storeId": "popup-trap",
+    "agent": "chatgpt-atlas",
+    "method": "browser-agent",
+    "reachedCheckout": false,
+    "stoppedAt": "product",
+    "reason": "Newsletter modal covered the page; no close button found.",
+    "evidence": ["screenshots/popup-trap-atlas-1.png", "https://chatgpt.com/share/example"],
+    "observedAt": "2026-10-03T12:00:00Z",
+    "observer": "darshan"
+  },
+  {
+    "storeId": "js-only",
+    "agent": "GPTBot",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": "fetch",
+    "reason": "Raw HTML had no product name or price.",
+    "evidence": ["curl -A GPTBot output saved as js-only-gptbot.html"],
+    "observedAt": "2026-10-03T12:05:00Z",
+    "observer": "darshan"
+  }
+]

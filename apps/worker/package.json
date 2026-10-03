@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit",
     "profile:store": "tsx --env-file=../../.env src/profile-cli.ts",
     "sessions:store": "tsx --env-file=../../.env src/sessions-cli.ts",
-    "replay:store": "tsx --env-file=../../.env src/replay-cli.ts"
+    "replay:store": "tsx --env-file=../../.env src/replay-cli.ts",
+    "bench:run": "tsx --env-file=../../.env src/bench/run.ts",
+    "bench:score": "tsx src/bench/score.ts"
   },
   "dependencies": {
     "@watchdog/db": "workspace:*",
