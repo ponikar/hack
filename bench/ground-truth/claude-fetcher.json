@@ -1,0 +1,288 @@
+[
+  {
+    "storeId": "control",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Name and price \u00a389.00 read from HTML.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "no-schema",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Name and price \u00a389.00 read from HTML.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "variant-required",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Name and price \u00a389.00 read from HTML.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "popup-trap",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Name and price \u00a389.00 read from HTML.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "popup-closable",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Name and price \u00a389.00 read from HTML.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "login-wall",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Name and price \u00a389.00 read from HTML.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "captcha",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Name and price \u00a389.00 read from HTML.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "cart-drawer",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Name and price \u00a389.00 read from HTML.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "icon-buttons",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Name and price \u00a389.00 read from HTML.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "search-only",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Name and price \u00a389.00 read from HTML.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "robots-block",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Read name and price; robots.txt was never requested.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "js-only",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": "fetch",
+    "reason": "Only 'Loading\u2026'; no name or price (no JS executed).",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "bot-403",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": "fetch",
+    "reason": "HTTP 403.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "allbirds",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": "fetch",
+    "reason": "Name and price read, but HTML states 'Out of stock' for a product a browser could add to cart (stock only correct after JS).",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "everlane",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": "fetch",
+    "reason": "Name and price read, but all sizes 'sold out or unavailable' in HTML for a product a browser bought in size 6.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "rothys",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Name, price \u00a3155, sizes read; stock not stated.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "johnlewis",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Name and price \u00a320.00 read; stock not stated.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "nike",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Name and price \u00a314.99 read; sizes not present.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "patagonia",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": "fetch",
+    "reason": "Served a site-maintenance page; browser got the real site.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "bombas",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": "fetch",
+    "reason": "HTTP 429.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "warbyparker",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": "fetch",
+    "reason": "HTTP 403.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "gymshark",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": null,
+    "reason": "Name and $52 price, sizes read; stock not stated.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'; no robots.txt request; no JS beacon"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  }
+]

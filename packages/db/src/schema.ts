@@ -19,3 +19,22 @@ export const runs = pgTable("runs", {
 
 export type Run = typeof runs.$inferSelect;
 export type NewRun = typeof runs.$inferInsert;
+
+export type AgentHitKind = "page" | "robots" | "beacon" | "api";
+
+export const agentHits = pgTable("agent_hits", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  ts: timestamp("ts", { withTimezone: true }).notNull().defaultNow(),
+  method: text("method"),
+  path: text("path"),
+  query: text("query"),
+  ua: text("ua"),
+  ip: text("ip"),
+  headers: jsonb("headers").$type<Record<string, string>>(),
+  kind: text("kind").$type<AgentHitKind>(),
+  benchCase: text("bench_case"),
+  note: text("note"),
+});
+
+export type AgentHit = typeof agentHits.$inferSelect;
+export type NewAgentHit = typeof agentHits.$inferInsert;
