@@ -1,0 +1,259 @@
+[
+  {
+    "storeId": "control",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Reached guest checkout form.",
+    "evidence": [
+      "bench agent_hits beacons, UA Claude/2.19675.0 Chrome/152, webdriver=false"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "popup-closable",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Reached guest checkout form.",
+    "evidence": [
+      "bench agent_hits beacons, UA Claude/2.19675.0 Chrome/152, webdriver=false"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "variant-required",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Reached guest checkout form.",
+    "evidence": [
+      "bench agent_hits beacons, UA Claude/2.19675.0 Chrome/152, webdriver=false"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "cart-drawer",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Reached guest checkout form.",
+    "evidence": [
+      "bench agent_hits beacons, UA Claude/2.19675.0 Chrome/152, webdriver=false"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "search-only",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Reached guest checkout form.",
+    "evidence": [
+      "bench agent_hits beacons, UA Claude/2.19675.0 Chrome/152, webdriver=false"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "js-only",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Reached guest checkout form.",
+    "evidence": [
+      "bench agent_hits beacons, UA Claude/2.19675.0 Chrome/152, webdriver=false"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "bot-403",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Reached guest checkout form.",
+    "evidence": [
+      "bench agent_hits beacons, UA Claude/2.19675.0 Chrome/152, webdriver=false"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "icon-buttons",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Reached guest checkout form.",
+    "evidence": [
+      "bench agent_hits beacons, UA Claude/2.19675.0 Chrome/152, webdriver=false"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "popup-trap",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": false,
+    "stoppedAt": "add_to_cart",
+    "reason": "Full-screen newsletter modal with no close control; Escape and backdrop click did nothing; Add to cart unreachable.",
+    "evidence": [
+      "manual run"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "login-wall",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": false,
+    "stoppedAt": "checkout",
+    "reason": "Checkout showed only a sign-in form (email+password); no guest option.",
+    "evidence": [
+      "manual run"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "captcha",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Reached checkout form; Continue to payment locked behind Cloudflare Turnstile (agent will not solve).",
+    "evidence": [
+      "manual run"
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "allbirds",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Guest checkout reached. Obstacles: cookie banner, cart drawer, on-site AI chat widget hijacked first checkout click.",
+    "evidence": [
+      "allbirds.com/checkouts/..."
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "everlane",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Guest checkout reached; first product sold out; \u00a37 PackageProtect auto-added to order.",
+    "evidence": [
+      "everlane.com/checkouts/..."
+    ],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "gymshark",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Guest checkout reached on us.checkout.gymshark.com; cookie + region modals; cart drawer; Add to bag not exposed as button role.",
+    "evidence": [],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "rothys",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Guest checkout reached; cart drawer; Secure Checkout not exposed as link role.",
+    "evidence": [],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "glossier",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Guest checkout reached; newsletter popup dismissed; accessibility-tree read crashed on product page (invalid label for attr), completed via screenshot.",
+    "evidence": [],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "patagonia",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Guest checkout reached; hero category pills are non-link text; cart page (not drawer).",
+    "evidence": [],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "johnlewis",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Guest checkout reached via auth.johnlewis.com; first Continue to checkout click ignored.",
+    "evidence": [],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "nike",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": false,
+    "stoppedAt": "add_to_cart",
+    "reason": "Add to Bag returned 'We couldn't complete your request\u2026 disable browser extensions' twice (bot protection on cart API).",
+    "evidence": [],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "bombas",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Guest checkout reached on shop.bombas.com; discount popup dismissed; cart drawer.",
+    "evidence": [],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "warbyparker",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Guest checkout reached; lens configurator + 2 upsells; cart CTA is 'Next step' not 'Checkout'; auth page with guest option.",
+    "evidence": [],
+    "observedAt": "2026-10-03T22:30:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  }
+]
