@@ -18,6 +18,8 @@ export type Run = {
   error: string | null;
   createdAt: string;
   updatedAt?: string;
+  shareUrl?: string | null;
+  rerunOf?: string | null;
 };
 
 export const CHECKS: Check[] = ["seen", "listed", "buyable"];

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { apiFetch } from "./api";
 
 export type FetchState<T> = { data: T | null; error: "unauthorized" | "not-found" | "network" | null; loading: boolean };
 
@@ -14,7 +15,7 @@ export function usePolled<T>(url: string, intervalMs: number, shouldPoll: (data:
 
     async function tick() {
       try {
-        const res = await fetch(url, { cache: "no-store" });
+        const res = await apiFetch(url, { cache: "no-store" });
         if (stop.current) return;
         if (res.status === 401 || res.status === 403) {
           setState({ data: null, error: "unauthorized", loading: false });
@@ -52,7 +53,7 @@ export async function createRun(storeUrl: string): Promise<{ id?: string; error?
   const mode = withScheme.includes("mode=fixed") ? "fixed" : withScheme.includes("mode=broken") ? "broken" : undefined;
   let res: Response;
   try {
-    res = await fetch("/api/runs", {
+    res = await apiFetch("/api/runs", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ storeUrl: withScheme, mode }),
@@ -63,6 +64,10 @@ export async function createRun(storeUrl: string): Promise<{ id?: string; error?
   if (res.status === 401 || res.status === 403) return { unauthorized: true };
   if (!res.ok) {
     if (res.status === 400) return { error: "That does not look like a store URL." };
+    if (res.status === 429) {
+      const body = (await res.json().catch(() => ({}))) as { error?: string };
+      return { error: body.error ?? "You have reached today's audit limit. Try again tomorrow." };
+    }
     return { error: `Could not start the audit (HTTP ${res.status}).` };
   }
   const body = (await res.json()) as { id: string };

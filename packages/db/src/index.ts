@@ -14,4 +14,4 @@ export const schema = { ...runSchema, ...authSchema };
 export const db = drizzle(client, { schema });
 export * from "./schema";
 export * from "./auth-schema";
-export { eq, desc, and, like, gte } from "drizzle-orm";
+export { eq, desc, and, like, gte, isNull, count } from "drizzle-orm";

@@ -1,6 +1,7 @@
 import path from "node:path";
 import fs from "node:fs";
 import { chromium, type Browser, type Page } from "playwright";
+import { put } from "@vercel/blob";
 import type { Session, SessionResult, SessionStep, StepResult, StoreProfile } from "@watchdog/shared";
 import robotsParser from "robots-parser";
 import { BROWSER_UA } from "../profile/signatures";
@@ -33,10 +34,28 @@ const label = (s: SessionStep) =>
 
 async function shot(page: Page, runId: string, sessionId: string, i: number) {
   const dir = path.join(SCREENSHOT_ROOT, runId);
-  fs.mkdirSync(dir, { recursive: true });
   const file = path.join(dir, `${sessionId}-${i}.png`);
-  await page.screenshot({ path: file }).catch(() => {});
-  return `/screenshots/${runId}/${sessionId}-${i}.png`;
+  let writable = true;
+  try {
+    fs.mkdirSync(dir, { recursive: true });
+  } catch {
+    writable = false;
+  }
+  const buf = await page.screenshot(writable ? { path: file } : {}).catch(() => null);
+  if (!process.env.BLOB_READ_WRITE_TOKEN) return `/screenshots/${runId}/${sessionId}-${i}.png`;
+  if (!buf) return undefined;
+  try {
+    const blob = await put(`screenshots/${runId}/${sessionId}-${i}.png`, buf, {
+      access: "public",
+      contentType: "image/png",
+      addRandomSuffix: false,
+      allowOverwrite: true,
+    });
+    return blob.url;
+  } catch (e) {
+    console.warn(`[replay] screenshot upload failed: ${(e as Error).message}`);
+    return undefined;
+  }
 }
 
 function finish(session: Session, steps: StepResult[], t0: number): SessionResult {

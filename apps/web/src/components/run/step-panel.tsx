@@ -7,7 +7,7 @@ import { personaLabel } from "./personas";
 import { blockerLabel, ms, shortStep } from "./format";
 import { StepChip } from "./step-chip";
 
-function Screenshot({ src, alt }: { src?: string; alt: string }) {
+export function Screenshot({ src, alt }: { src?: string; alt: string }) {
   const [failed, setFailed] = useState(false);
   useEffect(() => setFailed(false), [src]);
   if (!src || failed) {

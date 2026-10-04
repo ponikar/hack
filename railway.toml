@@ -1,0 +1,7 @@
+# Railway service config for the audit worker (Docker build from the repo root).
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "apps/worker/Dockerfile"
+
+[deploy]
+restartPolicyType = "ALWAYS"
