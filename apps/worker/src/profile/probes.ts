@@ -107,12 +107,15 @@ export async function probeAiFiles(origin: string) {
 export type ProductSample = { url: string; name: string; type?: string; options: string[]; variants: number; price?: string };
 
 export async function probeShopifyProducts(origin: string): Promise<ProductSample[] | null> {
-  const { res, text } = await get(`${origin}/products.json?limit=10`).catch(() => ({ res: undefined, text: "" }));
+  const { res, text } = await get(`${origin}/products.json?limit=30`).catch(() => ({ res: undefined, text: "" }));
   if (!res?.ok || !text.trim().startsWith("{")) return null;
   try {
-    const data = JSON.parse(text) as { products?: Array<{ handle: string; title: string; product_type?: string; options?: Array<{ name: string }>; variants?: Array<{ price: string }> }> };
+    const data = JSON.parse(text) as { products?: Array<{ handle: string; title: string; product_type?: string; options?: Array<{ name: string }>; variants?: Array<{ price: string; available?: boolean }> }> };
     if (!data.products?.length) return null;
-    return data.products.map((p) => ({
+    const sellable = (p: { variants?: Array<{ price: string; available?: boolean }> }) =>
+      (p.variants ?? []).some((v) => v.available !== false && Number(v.price) > 0);
+    const ranked = [...data.products].sort((a, b) => Number(sellable(b)) - Number(sellable(a)));
+    return ranked.map((p) => ({
       url: `${origin}/products/${p.handle}`,
       name: p.title,
       type: p.product_type,

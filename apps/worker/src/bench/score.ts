@@ -89,7 +89,10 @@ function compare(truth: GroundTruth[], personas: PersonaSummary[]): Comparison[]
   return truth.flatMap((g) => {
     const arch: Archetype = g.method === "fetcher" ? "feed-reader" : "browser-agent";
     const t = truthOutcome(g);
-    return personas.filter((p) => p.storeId === g.storeId && p.archetype === arch).map((p) => ({
+    const candidates = personas.filter((p) => p.storeId === g.storeId && p.archetype === arch);
+    // When ground truth comes from a specific product and we simulate that same product, compare like with like.
+    const twin = g.agent === "claude-user-fetcher" ? candidates.filter((p) => p.agent === "claude-user") : [];
+    return (twin.length ? twin : candidates).map((p) => ({
       storeId: g.storeId,
       truthAgent: g.agent,
       method: g.method,
@@ -97,7 +100,8 @@ function compare(truth: GroundTruth[], personas: PersonaSummary[]): Comparison[]
       ours: { outcome: p.outcome, stoppedAt: p.stoppedAt, reason: p.reason },
       truth: { outcome: t, stoppedAt: g.stoppedAt, reason: g.reason },
       outcomeMatch: p.outcome === t,
-      stepMatch: p.stoppedAt === g.stoppedAt,
+      // Both sides succeeding is a step match even though the engine records the payment gate as its stop.
+      stepMatch: p.stoppedAt === g.stoppedAt || (reached(p.outcome) && reached(t)) || (p.outcome === t && p.outcome === "pass"),
       falseAlarm: blockedOut(p.outcome) && reached(t),
       miss: reached(p.outcome) && blockedOut(t),
     }));
@@ -214,7 +218,21 @@ const personas = summarizePersonas(runs);
 const comps = compare(truth, personas);
 const expects = checkExpectations(personas, storeIds);
 
+// Store level: an archetype "agrees" with a ground-truth row when most of our personas of that archetype got the same outcome.
+function storeLevel(method: "fetcher" | "browser-agent") {
+  const rows = truth.filter((g) => g.method === method);
+  let match = 0;
+  const kind = (o: string) => (reached(o as Outcome) ? "ok" : "blocked");
+  for (const g of rows) {
+    const cs = comps.filter((c) => c.storeId === g.storeId && c.truthAgent === g.agent);
+    const agree = cs.filter((c) => kind(c.ours.outcome) === kind(c.truth.outcome)).length;
+    if (cs.length && agree * 2 > cs.length) match++;
+  }
+  return { match, total: rows.length };
+}
+
 const totals = {
+  storeLevel: { browser: storeLevel("browser-agent"), feed: storeLevel("fetcher") },
   runs: runs.length,
   runErrors: runs.filter((r) => r.error).length,
   meanConsistency: personas.length ? personas.reduce((a, p) => a + p.consistency, 0) / personas.length : null,

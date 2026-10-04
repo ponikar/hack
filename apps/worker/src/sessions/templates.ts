@@ -62,7 +62,8 @@ function addToCart(p: StoreProfile): SessionStep {
 }
 
 function checkoutExpect(p: StoreProfile): Expect {
-  return p.structure.checkoutHost ? { urlHost: p.structure.checkoutHost } : { urlContains: "checkout" };
+  // Checkout often moves host (Shopify subdomains, auth domains, regional sites); any checkout URL or a visible checkout form counts.
+  return { anyOf: ["urlContains:checkout", "checkoutForm"] };
 }
 
 function checkout(p: StoreProfile): SessionStep {
@@ -82,9 +83,9 @@ function cartToEnd(p: StoreProfile, params: TemplateParams): SessionStep[] {
 export const feedReader: Template = (p, params) => {
   const url = params.productUrl || p.finalUrl;
   const steps: SessionStep[] = [];
-  if (p.structuredData.feed) steps.push({ op: "fetch", url: p.structuredData.feed, expect: { anyOf: ["jsonProducts", "text:price"] } });
   steps.push({ op: "fetch", url, expect: params.productName ? { text: params.productName } : { anyOf: ["jsonldProduct", "text:price"] } });
   steps.push({ op: "fetch", url, expect: { anyOf: ["jsonldProduct", "priceVisible", "variantsVisible"] } });
+  if (params.productUrl) steps.push({ op: "fetch", url, expect: { anyOf: ["notSoldOut"] } });
   return steps;
 };
 
@@ -95,7 +96,7 @@ export const directLink: Template = (p, params) => [
 ];
 
 export const searchFirst: Template = (p, params) => [
-  { op: "goto", url: origin(p) },
+  { op: "goto", url: p.url },
   ...dismissSteps(p),
   {
     op: "act",

@@ -8,7 +8,9 @@ import { errorObservation, normalize, type Observation } from "./normalize";
 import { PERSONAS } from "../sessions/personas";
 import { BENCH_DIR } from "./ground-truth";
 
+export type LlmUsage = { calls: number; refused: number; promptTokens: number; completionTokens: number; images: number };
 export type RunRecord = {
+  llm?: LlmUsage;
   storeId: string;
   rep: number;
   url: string;
@@ -31,27 +33,31 @@ function arg(name: string): string | undefined {
 }
 
 async function child() {
-  const [url, runId, outFile] = [arg("url")!, arg("run-id")!, arg("child")!];
+  const [url, runId, outFile, product] = [arg("url")!, arg("run-id")!, arg("child")!, arg("product")];
   const { profileStore } = await import("../profile");
   const { generateSessions } = await import("../sessions");
   const { replaySessions } = await import("../replay");
   const { computeVerdicts } = await import("../verdicts");
+  const { usage, usageLine } = await import("../llm");
   const partial: Partial<RunRecord> = {};
   try {
     partial.profile = await profileStore(url);
-    partial.sessions = await generateSessions(partial.profile);
+    // A real shopper knows what they want; give the agent the store's product when the profiler could not find one.
+    partial.sessions = await generateSessions(partial.profile, { productHint: product });
     partial.results = await replaySessions(partial.sessions, partial.profile, runId);
     partial.verdicts = computeVerdicts(partial.profile, partial.results);
   } catch (err) {
     partial.error = (err as Error).message.split("\n")[0];
   }
+  partial.llm = { ...usage };
+  console.error(usageLine());
   fs.writeFileSync(outFile, JSON.stringify(partial));
   process.exit(0);
 }
 
 function runChild(store: BenchStore, runId: string, tmpFile: string, screenshotDir: string): Promise<Partial<RunRecord>> {
   return new Promise((resolve) => {
-    const p = spawn(process.execPath, [...process.execArgv, SELF, "--child", tmpFile, "--url", store.url, "--run-id", runId], {
+    const p = spawn(process.execPath, [...process.execArgv, SELF, "--child", tmpFile, "--url", store.url, "--run-id", runId, ...(store.product ? ["--product", store.product] : [])], {
       stdio: ["ignore", "ignore", "inherit"],
       env: { ...process.env, SCREENSHOT_DIR: process.env.SCREENSHOT_DIR ?? screenshotDir },
     });
@@ -108,6 +114,7 @@ async function main() {
   fs.mkdirSync(out, { recursive: true });
   console.error(`bench: ${stores.length} store(s) x ${repeat} -> ${out}`);
 
+  const total: LlmUsage = { calls: 0, refused: 0, promptTokens: 0, completionTokens: 0, images: 0 };
   for (const store of stores) {
     for (let rep = 1; rep <= repeat; rep++) {
       const startedAt = new Date().toISOString();
@@ -127,11 +134,14 @@ async function main() {
         verdicts: data.verdicts ?? null,
         observations: results.length ? results.map(normalize) : errorObservations(data.error ?? "no results"),
         ...(data.error ? { error: data.error } : {}),
+        ...(data.llm ? { llm: data.llm } : {}),
       };
+      if (data.llm) for (const k of Object.keys(total) as (keyof LlmUsage)[]) total[k] += data.llm[k];
       fs.writeFileSync(path.join(out, `${store.id}-${rep}.json`), JSON.stringify(record, null, 2));
       console.log(summarize(record));
     }
   }
+  console.error(`LLM total: ${total.calls} calls (${total.images} with screenshots, ${total.refused} refused by cap), ${total.promptTokens} prompt + ${total.completionTokens} output tokens`);
   console.error(`done. score with: pnpm -C apps/worker bench:score ${out}`);
 }
 

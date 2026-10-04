@@ -23,13 +23,25 @@ async function token(page: Page, t: string): Promise<boolean> {
   if (t.startsWith("urlContains:")) return page.url().toLowerCase().includes(t.slice(12).toLowerCase());
   if (t.startsWith("text:")) return textMatch(await bodyText(page), t.slice(5));
   switch (t) {
-    case "drawerVisible":
-      return page.locator(DRAWER).filter({ visible: true }).count().then((n) => n > 0);
+    case "drawerVisible": {
+      if (await page.locator(DRAWER).filter({ visible: true }).count()) return true;
+      // Many themes render the cart drawer as an accessible dialog/aside headed "Cart"/"Bag".
+      return page.locator('[role="dialog"], aside, [aria-modal="true"]').filter({ visible: true, hasText: /\b(your )?(shopping )?(cart|bag|basket)\b/i }).count().then((n) => n > 0).catch(() => false);
+    }
     case "cartCountIncreased": {
       const badge = await page.locator("[class*=cart-count], [data-cart-count], .cart-count-bubble, [id*=cart-count], [class*=CartCount]").first().innerText({ timeout: 1000 }).catch(() => "");
       if (/[1-9]/.test(badge)) return true;
+      const labelled = await page.locator('[aria-label*="cart" i], [aria-label*="bag" i], [aria-label*="basket" i]').evaluateAll((els) => els.some((e) => /\b[1-9]\d*\b/.test(`${e.getAttribute("aria-label")} ${(e as HTMLElement).innerText}`))).catch(() => false);
+      if (labelled) return true;
       return /\b[1-9]\d* items? in (your )?(cart|bag|basket)|added to (your )?(cart|bag|basket)|item added/i.test(await bodyText(page));
     }
+    case "checkoutForm":
+      return page
+        .locator('input[type="email"], input[autocomplete="email"], input[name*="email" i]')
+        .filter({ visible: true })
+        .count()
+        .then(async (n) => n > 0 && /checkout|shipping|delivery|contact/i.test(`${page.url()} ${await page.title()}`))
+        .catch(() => false);
     case "addToCartVisible":
       return page.getByRole("button", { name: ADD }).or(page.getByRole("link", { name: ADD })).filter({ visible: true }).count().then((n) => n > 0);
     case "addToCartEnabled":
@@ -65,6 +77,7 @@ export async function checkPage(page: Page, e: Expect): Promise<{ ok: boolean; w
 const TOKEN_TEXT: Record<string, string> = {
   jsonProducts: "no product feed",
   jsonldProduct: "no Product schema",
+  notSoldOut: "the product marked as out of stock",
   priceVisible: "no visible price",
   variantsVisible: "no variant options",
 };
@@ -88,6 +101,15 @@ export function checkHtml(html: string, e: Expect, url: string): { ok: boolean; 
     if (t === "jsonProducts") { try { const j = JSON.parse(html); return Array.isArray(j?.products) ? j.products.length > 0 : Array.isArray(j) && j.length > 0; } catch { return false; } }
     if (t === "jsonldProduct") return parseJsonLd(html).some((o) => ([] as string[]).concat(o["@type"] as string).some((x) => x === "Product" || x === "ProductGroup"));
     if (t === "priceVisible") return PRICE.test(text);
+    if (t === "notSoldOut") {
+      // AI readers report what the text next to the buy button says; a default variant shown as sold out reads as "unavailable"
+      // even when other sizes are in stock (seen on allbirds.com, 2026-10-03).
+      if (/add to (cart|bag|basket)[^.]{0,40}\b(out of stock|sold out)\b|\b(out of stock|sold out)\b[^.]{0,40}add to (cart|bag|basket)/i.test(text)) return false;
+      const offers = parseJsonLd(html).flatMap((o) => ([] as unknown[]).concat((o as Record<string, unknown>).offers ?? []));
+      const avail = offers.map((o) => String((o as Record<string, unknown>)?.availability ?? "")).filter(Boolean);
+      if (avail.length) return avail.some((a) => !/OutOfStock|SoldOut|Discontinued/i.test(a));
+      return !(/\b(out of stock|sold out)\b/i.test(text) && !/add to (cart|bag|basket)/i.test(text));
+    }
     if (t === "variantsVisible") return /<select[^>]+name="id"|variant-selects|variant-radios|<option/i.test(html);
     if (t.startsWith("urlContains:")) return url.includes(t.slice(12));
     return false;

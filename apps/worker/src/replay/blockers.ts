@@ -34,6 +34,18 @@ export async function detectBlocker(page: Page): Promise<Blocker | null> {
   }
 }
 
+// Cookie banners rarely cover the whole page, so the overlay detector misses them; dismiss them for free after every page load.
+export async function dismissCookieBanner(page: Page): Promise<boolean> {
+  const btn = page
+    .getByRole("button", { name: /^(reject all|reject|decline( all)?|deny|accept only (essential|necessary)( cookies)?|only (essential|necessary)( cookies)?|necessary only|continue without accepting)$/i })
+    .filter({ visible: true })
+    .first();
+  if (!(await btn.count().catch(() => 0))) return false;
+  await btn.click({ timeout: 2000 }).catch(() => {});
+  await page.waitForTimeout(400);
+  return true;
+}
+
 export async function tryDismiss(page: Page): Promise<boolean> {
   const closers = page
     .getByRole("button", { name: /^(accept( all)?|agree|got it|ok|close|no,? thanks|dismiss|continue|×|x)$/i })

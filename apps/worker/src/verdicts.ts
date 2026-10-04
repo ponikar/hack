@@ -45,7 +45,11 @@ export function computeVerdicts(profile: StoreProfile, results: SessionResult[])
   const byClass = new Map<FixClass, Set<string>>();
   const add = (cls: FixClass, persona: string) => byClass.set(cls, new Set([...(byClass.get(cls) ?? []), persona]));
 
-  if (seen === "fail" || profile.rendering.jsOnly) feed.filter((r) => r.status !== "pass").forEach((r) => add("js_only", r.persona));
+  for (const r of feed) {
+    if (r.status === "pass") continue;
+    const s = r.steps.find((x) => x.status === "blocked" || x.status === "failed");
+    add(s?.blocker === "robots" ? "robots_block" : s?.blocker === "waf" ? "waf_block" : "js_only", r.persona);
+  }
   if (!profile.structuredData.productJsonLd) ["chatgpt-shopping", "google-ai-mode"].forEach((p) => add("no_schema", p));
   if (!profile.structuredData.feed && listed === "fail") ["chatgpt-shopping", "perplexity-search"].forEach((p) => add("no_feed", p));
   Object.entries(profile.ai.robotsAllows).filter(([, ok]) => !ok).forEach(([bot]) => add("robots_block", bot));
