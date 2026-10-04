@@ -125,7 +125,13 @@ async function replayBrowser(session: Session, profile: StoreProfile, browser: B
           const b = await detectBlocker(page);
           if (b === "challenge" || b === "captcha") { await push(i, s, "blocked", { blocker: b, reason: BLOCKER_TEXT[b] }, st); break; }
           await push(i, s, "ok", {}, st);
-        } catch (err) { await push(i, s, "failed", { reason: (err as Error).message.split("\n")[0] }, st); break; }
+        } catch (err) {
+          const m = (err as Error).message.split("\n")[0];
+          // Our own connection dropping says nothing about the store.
+          const ours = /ERR_INTERNET_DISCONNECTED|ERR_NETWORK_CHANGED|ERR_NAME_NOT_RESOLVED|ERR_PROXY/i.test(m);
+          await push(i, s, "failed", ours ? { blocker: "llm", reason: `Inconclusive: our network dropped (${m.slice(0, 80)}).` } : { reason: m }, st);
+          break;
+        }
         continue;
       }
 
