@@ -7,7 +7,7 @@ import { RunView } from "@/app/dashboard/[id]/run-view";
 
 export const metadata: Metadata = {
   title: "Sample report · AI Buyer Watchdog",
-  description: "A finished Watchdog audit of the demo store in broken mode: every buyer journey, the failing step, its screenshot and the fix list.",
+  description: "A finished Watchdog audit of the demo store in broken mode: the issues AI buyers hit, the evidence for each, and how to fix them.",
 };
 
 export default function DemoReportPage() {
@@ -32,7 +32,7 @@ export default function DemoReportPage() {
         </div>
       </header>
       <div className="flex-1">
-        <RunView id="demo" endpoint="/api/public/demo-run" back={{ href: "/", label: "Back to Watchdog" }} />
+        <RunView id="demo" mode="demo" endpoint="/api/public/demo-run" back={{ href: "/", label: "Back to Watchdog" }} />
       </div>
       <Footer />
     </>
