@@ -8,7 +8,7 @@ import { errorObservation, normalize, type Observation } from "./normalize";
 import { PERSONAS } from "../sessions/personas";
 import { BENCH_DIR } from "./ground-truth";
 
-export type LlmUsage = { calls: number; refused: number; promptTokens: number; completionTokens: number; images: number };
+export type LlmUsage = { calls: number; refused: number; promptTokens: number; completionTokens: number; images: number; strongCalls: number };
 export type RunRecord = {
   llm?: LlmUsage;
   storeId: string;
@@ -114,7 +114,7 @@ async function main() {
   fs.mkdirSync(out, { recursive: true });
   console.error(`bench: ${stores.length} store(s) x ${repeat} -> ${out}`);
 
-  const total: LlmUsage = { calls: 0, refused: 0, promptTokens: 0, completionTokens: 0, images: 0 };
+  const total: LlmUsage = { calls: 0, refused: 0, promptTokens: 0, completionTokens: 0, images: 0, strongCalls: 0 };
   for (const store of stores) {
     for (let rep = 1; rep <= repeat; rep++) {
       const startedAt = new Date().toISOString();
@@ -136,12 +136,12 @@ async function main() {
         ...(data.error ? { error: data.error } : {}),
         ...(data.llm ? { llm: data.llm } : {}),
       };
-      if (data.llm) for (const k of Object.keys(total) as (keyof LlmUsage)[]) total[k] += data.llm[k];
+      if (data.llm) for (const k of Object.keys(total) as (keyof LlmUsage)[]) total[k] += data.llm[k] ?? 0;
       fs.writeFileSync(path.join(out, `${store.id}-${rep}.json`), JSON.stringify(record, null, 2));
       console.log(summarize(record));
     }
   }
-  console.error(`LLM total: ${total.calls} calls (${total.images} with screenshots, ${total.refused} refused by cap), ${total.promptTokens} prompt + ${total.completionTokens} output tokens`);
+  console.error(`LLM total: ${total.calls} calls (${total.strongCalls} escalated, ${total.images} with screenshots, ${total.refused} refused by cap), ${total.promptTokens} prompt + ${total.completionTokens} output tokens`);
   console.error(`done. score with: pnpm -C apps/worker bench:score ${out}`);
 }
 

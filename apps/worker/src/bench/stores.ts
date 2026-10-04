@@ -20,6 +20,9 @@ const real: BenchStore[] = [
   { id: "nike", kind: "real", url: "https://www.nike.com", notes: "Custom; Akamai; add-to-bag blocked for automated browser" },
   { id: "bombas", kind: "real", url: "https://www.bombas.com", notes: "Vercel bot protection 429 to plain fetch" },
   { id: "warbyparker", kind: "real", url: "https://www.warbyparker.com", notes: "403 to plain fetch" },
+  // Hold-out stores: ground truth recorded after the engine was tuned; never used to choose fixes.
+  { id: "kotn", kind: "real", url: "https://kotn.com", notes: "holdout; Shopify; price JS-rendered; package-protection upsell" },
+  { id: "lush", kind: "real", url: "https://www.lush.com/uk/en", notes: "holdout; custom; 403 to AI fetcher" },
 ];
 
 export const BENCH_STORES: BenchStore[] = [...fixtures, ...real];

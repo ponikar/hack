@@ -63,6 +63,8 @@ export function normalize(r: SessionResult): Observation {
     return { ...base, reachedCheckout: null, stoppedAt: failed ? "fetch" : null, reason: failed ? bad?.reason ?? r.summary : null, blocker: bad?.blocker ?? null };
   }
 
+  if (bad?.blocker === "llm") return { ...base, reachedCheckout: null, stoppedAt: null, reason: `error: ${bad.reason}`, blocker: "error" };
+
   if (r.status === "pass") {
     return { ...base, reachedCheckout: true, stoppedAt: stoppedAtPayment ? "payment" : badLabel, reason: stoppedAtPayment ? "payment gate" : null, blocker: null };
   }

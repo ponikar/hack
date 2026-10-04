@@ -37,28 +37,28 @@ async function observe(page: Page, withShot: boolean) {
   return { snap, shot };
 }
 
-export type AgentStepResult = { ok: boolean; done: boolean; why: string; actions: string[] };
+export type AgentStepResult = { ok: boolean; done: boolean; stuck: boolean; llmError?: boolean; why: string; actions: string[] };
 
-export async function agentStep(page: Page, goal: string, opts: { maxActions?: number; isDone?: () => Promise<boolean>; screenshot?: boolean } = {}): Promise<AgentStepResult> {
+export async function agentStep(page: Page, goal: string, opts: { maxActions?: number; isDone?: () => Promise<boolean>; screenshot?: boolean; model?: string } = {}): Promise<AgentStepResult> {
   const max = opts.maxActions ?? 4;
   let needShot = opts.screenshot ?? false;
   const actions: string[] = [];
   let lastWhy = "";
   for (let n = 0; n < max; n++) {
-    if (opts.isDone && (await opts.isDone())) return { ok: true, done: true, why: lastWhy, actions };
-    if (!llmAvailable()) return { ok: false, done: false, why: lastWhy || "LLM call cap reached.", actions };
+    if (opts.isDone && (await opts.isDone())) return { ok: true, done: true, stuck: false, why: lastWhy, actions };
+    if (!llmAvailable()) return { ok: false, done: false, stuck: false, llmError: true, why: lastWhy || "LLM call cap reached.", actions };
     const { snap, shot } = await observe(page, needShot);
-    if (!snap && !shot) return { ok: false, done: false, why: "Page could not be read.", actions };
+    if (!snap && !shot) return { ok: false, done: false, stuck: false, why: "Page could not be read.", actions };
     const prior = actions.length ? `\nActions already taken this step: ${actions.join(" → ")}` : "";
     let a: Action;
     try {
-      a = await askJsonWithImage<Action>(SYSTEM, `Goal: ${goal}\nURL: ${page.url()}${prior}\n\nAccessibility snapshot:\n${snap || "(unavailable: the page markup broke the accessibility tree, rely on the screenshot)"}`, shot);
+      a = await askJsonWithImage<Action>(SYSTEM, `Goal: ${goal}\nURL: ${page.url()}${prior}\n\nAccessibility snapshot:\n${snap || "(unavailable: the page markup broke the accessibility tree, rely on the screenshot)"}`, shot, opts.model);
     } catch (err) {
-      return { ok: false, done: false, why: `LLM error: ${(err as Error).message.split("\n")[0]}`, actions };
+      return { ok: false, done: false, stuck: false, llmError: true, why: `LLM error: ${(err as Error).message.split("\n")[0]}`, actions };
     }
     lastWhy = a.why ?? "";
-    if (a.type === "done") return { ok: true, done: true, why: lastWhy, actions };
-    if (a.type === "stuck") return { ok: false, done: false, why: lastWhy || "Agent could not continue.", actions };
+    if (a.type === "done") return { ok: true, done: true, stuck: false, why: lastWhy, actions };
+    if (a.type === "stuck") return { ok: false, done: false, stuck: true, why: lastWhy || "Agent could not continue.", actions };
     try {
       if (a.type === "click") {
         const loc = page.locator(`aria-ref=${a.ref}`);
@@ -81,8 +81,8 @@ export async function agentStep(page: Page, goal: string, opts: { maxActions?: n
     await page.waitForTimeout(900);
     if (opts.isDone && !(await opts.isDone())) needShot = needShot || n >= 1;
   }
-  if (opts.isDone && (await opts.isDone())) return { ok: true, done: true, why: lastWhy, actions };
-  return { ok: false, done: false, why: lastWhy || `Goal not reached after ${max} actions.`, actions };
+  if (opts.isDone && (await opts.isDone())) return { ok: true, done: true, stuck: false, why: lastWhy, actions };
+  return { ok: false, done: false, stuck: false, why: lastWhy || `Goal not reached after ${max} actions.`, actions };
 }
 
 export async function llmAct(page: Page, instr: string): Promise<{ ok: boolean; why: string }> {
