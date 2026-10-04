@@ -9,7 +9,8 @@ import { Nav } from "@/components/marketing/nav";
 import type { Run } from "@/components/run/types";
 import { createRun, usePolled } from "@/components/run/use-run";
 import { hostOf, relativeTime } from "@/components/run/format";
-import { ModeBadge, OverallPill, StatusPill } from "@/components/run/badges";
+import { ModeBadge, StatusPill } from "@/components/run/badges";
+import { canBuy, deriveIssues, severityCounts } from "@/components/run/issues";
 import { SignedOut } from "@/components/run/signed-out";
 
 const anyActive = (rows: Run[] | null) => !rows || rows.some((r) => r.status !== "done" && r.status !== "error");
@@ -60,7 +61,7 @@ export default function Dashboard() {
                       <ModeBadge mode={r.mode} />
                       <StatusPill status={r.status} />
                       {r.verdicts ? (
-                        <OverallPill overall={r.verdicts.overall} />
+                        <RunOutcome run={r} />
                       ) : (
                         <span className="inline-flex h-6 w-[72px] items-center justify-center rounded-full border border-dashed border-line text-xs text-faint">
                           {r.status === "error" ? "—" : "pending"}
@@ -75,6 +76,25 @@ export default function Dashboard() {
         </div>
       </main>
     </>
+  );
+}
+
+function RunOutcome({ run }: { run: Run }) {
+  const critical = severityCounts(deriveIssues(run)).critical;
+  const buyable = canBuy(run);
+  return (
+    <span className="inline-flex items-center gap-2">
+      <span
+        className={`inline-flex h-6 items-center gap-1.5 rounded-full border px-2.5 text-xs font-semibold ${
+          buyable ? "border-ok/30 bg-ok-soft text-ok" : "border-fail/30 bg-fail-soft text-fail"
+        }`}
+      >
+        {buyable ? "AI can buy" : "AI can’t buy"}
+      </span>
+      <span className={`whitespace-nowrap text-xs ${critical ? "font-medium text-fail" : "text-muted"}`}>
+        {critical} critical
+      </span>
+    </span>
   );
 }
 
@@ -134,7 +154,11 @@ function NewAuditForm() {
           Try the demo store
         </button>
       </p>
-      {error && <p className="mt-2 text-sm text-fail">{error}</p>}
+      {error && (
+        <p role="alert" className="mt-2 text-sm text-fail">
+          {error}
+        </p>
+      )}
     </form>
   );
 }
