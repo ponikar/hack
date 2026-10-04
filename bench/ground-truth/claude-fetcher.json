@@ -284,5 +284,31 @@
     ],
     "observedAt": "2026-10-03T22:30:00Z",
     "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "kotn",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": "fetch",
+    "reason": "Product name present but price NOT PRESENT in HTML (rendered by JavaScript).",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'"
+    ],
+    "observedAt": "2026-10-04T12:00:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "lush",
+    "agent": "claude-user-fetcher",
+    "method": "fetcher",
+    "reachedCheckout": null,
+    "stoppedAt": "fetch",
+    "reason": "HTTP 403 to the AI fetcher.",
+    "evidence": [
+      "WebFetch; UA 'Claude-User (claude-code/2.1.286; +https://support.anthropic.com/)'"
+    ],
+    "observedAt": "2026-10-04T12:00:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
   }
 ]

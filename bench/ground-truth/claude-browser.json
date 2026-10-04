@@ -255,5 +255,27 @@
     "evidence": [],
     "observedAt": "2026-10-03T22:30:00Z",
     "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "kotn",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Guest checkout reached on shop.kotn.com. Cookie banner; size picker; cart drawer offers 'Checkout WITH package protection' as the primary button (chose without).",
+    "evidence": [],
+    "observedAt": "2026-10-04T12:00:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
+  },
+  {
+    "storeId": "lush",
+    "agent": "claude-browser",
+    "method": "browser-agent",
+    "reachedCheckout": true,
+    "stoppedAt": null,
+    "reason": "Guest checkout reached on checkout.lush.com via 'Continue as a guest'. Home page would not scroll to products, used search; 'added to bag' toast vanished before it could be clicked.",
+    "evidence": [],
+    "observedAt": "2026-10-04T12:00:00Z",
+    "observer": "claude (opus-5.5) driving Claude desktop built-in browser"
   }
 ]

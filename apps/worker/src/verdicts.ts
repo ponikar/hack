@@ -22,6 +22,7 @@ function fix(cls: FixClass, personas: string[]): Fix {
 function blockerClass(r: SessionResult): FixClass | null {
   const s = r.steps.find((x) => x.status === "blocked" || x.status === "failed");
   if (!s) return null;
+  if (s.blocker === "llm") return "llm_error";
   if (s.blocker === "login") return "login";
   if (s.blocker === "overlay") return "popup";
   if (s.blocker === "captcha") return "captcha";

@@ -89,7 +89,8 @@ function compare(truth: GroundTruth[], personas: PersonaSummary[]): Comparison[]
   return truth.flatMap((g) => {
     const arch: Archetype = g.method === "fetcher" ? "feed-reader" : "browser-agent";
     const t = truthOutcome(g);
-    const candidates = personas.filter((p) => p.storeId === g.storeId && p.archetype === arch);
+    // Inconclusive runs (model unavailable, timeouts) say nothing about the store; leave them out instead of counting them as blocked.
+    const candidates = personas.filter((p) => p.storeId === g.storeId && p.archetype === arch && p.outcome !== "error");
     // When ground truth comes from a specific product and we simulate that same product, compare like with like.
     const twin = g.agent === "claude-user-fetcher" ? candidates.filter((p) => p.agent === "claude-user") : [];
     return (twin.length ? twin : candidates).map((p) => ({

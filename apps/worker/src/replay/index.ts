@@ -8,6 +8,7 @@ import { checkHtml, checkPage } from "./expect";
 import { BLOCKER_TEXT, detectBlocker, dismissCookieBanner, tryDismiss } from "./blockers";
 import { fastPath } from "./fastpath";
 import { agentStep, llmAvailable } from "./llmact";
+import { LLM_MODEL, LLM_MODEL_STRONG } from "../llm";
 import { PERSONAS } from "../sessions/personas";
 
 const personaLabel = (id: string) => PERSONAS.find((p) => p.id === id)?.label ?? id;
@@ -146,6 +147,7 @@ async function replayBrowser(session: Session, profile: StoreProfile, browser: B
         let blocker: string | undefined;
         let ok = false;
         let agentWhy = "";
+        let llmFailed = false;
         if (useLlm) {
           const pre = await detectBlocker(page);
           if (pre === "captcha" || pre === "challenge") { blocker = pre; reason = BLOCKER_TEXT[pre]; }
@@ -159,8 +161,14 @@ async function replayBrowser(session: Session, profile: StoreProfile, browser: B
               const goal = findsProduct
                 ? "Open the product page of any in-stock product in this store. If the search found nothing, go back and browse the home page or a category instead."
                 : s.instr.replace(/^add to cart$/i, "add the product to the cart (choose any in-stock size or option first if required)");
-              const r = await agentStep(page, goal, { maxActions: findsProduct ? 6 : 4, isDone: async () => (await checkPage(page, s.expect)).ok });
-              agentWhy = r.why;
+              let r = await agentStep(page, goal, { maxActions: findsProduct ? 7 : 6, isDone: async () => (await checkPage(page, s.expect)).ok });
+              // One retry with the stronger model, only for steps the cheap model could not finish.
+              if (!r.ok && LLM_MODEL_STRONG !== LLM_MODEL && llmAvailable()) {
+                const blockedHard = ["captcha", "login", "challenge"].includes((await detectBlocker(page)) ?? "");
+                if (!blockedHard) r = await agentStep(page, goal, { maxActions: 4, screenshot: true, model: LLM_MODEL_STRONG, isDone: async () => (await checkPage(page, s.expect)).ok });
+              }
+              agentWhy = r.stuck ? r.why : "";
+              if (!r.ok && r.llmError) llmFailed = true;
               // A product page is the agent's call to make (URLs vary: /products/, /p/, /eyeglasses/...); trust its "done" once it has left the listing.
               ok = (r.ok && (await checkPage(page, s.expect)).ok) || (findsProduct && r.done && page.url() !== startUrl);
               if (!ok) reason = r.why;
@@ -189,6 +197,10 @@ async function replayBrowser(session: Session, profile: StoreProfile, browser: B
           const r = await checkPage(page, s.expect);
           ok = r.ok;
           if (!ok && !reason) reason = `Expected ${r.why}.`;
+        }
+        if (!ok && llmFailed && !blocker) {
+          await push(i, s, "failed", { blocker: "llm", reason: "Inconclusive: the agent's model was unavailable (quota or rate limit), so this step was not tested." }, st);
+          break;
         }
         if (ok) await push(i, s, "ok", {}, st);
         else { await push(i, s, blocker ? "blocked" : "failed", { blocker, reason }, st); break; }
