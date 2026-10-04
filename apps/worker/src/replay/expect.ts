@@ -35,6 +35,9 @@ async function token(page: Page, t: string): Promise<boolean> {
       if (labelled) return true;
       return /\b[1-9]\d* items? in (your )?(cart|bag|basket)|added to (your )?(cart|bag|basket)|item added/i.test(await bodyText(page));
     }
+    case "checkoutVisible":
+      // After adding to cart most themes reveal a Checkout control (drawer, mini-cart, toast).
+      return page.getByRole("button", { name: /check ?out/i }).or(page.getByRole("link", { name: /check ?out/i })).filter({ visible: true }).count().then((n) => n > 0).catch(() => false);
     case "checkoutForm":
       return page
         .locator('input[type="email"], input[autocomplete="email"], input[name*="email" i]')

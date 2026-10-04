@@ -19,7 +19,9 @@ const client = provider ? new OpenAI({ apiKey: provider.apiKey, baseURL: provide
 
 // Hard spend guard: every process gets a fixed number of LLM calls (LLM_MAX_CALLS, default 40).
 const MAX_CALLS = Number(process.env.LLM_MAX_CALLS ?? 40);
-const MIN_GAP_MS = Number(process.env.LLM_MIN_GAP_MS ?? 1500);
+// Adaptive pacing: free-tier limits are per project and unpublished, so slow down on every 429 and speed back up on success.
+const BASE_GAP_MS = Number(process.env.LLM_MIN_GAP_MS ?? 2000);
+let gapMs = BASE_GAP_MS;
 let lastCallAt = 0;
 export const usage = { calls: 0, refused: 0, promptTokens: 0, completionTokens: 0, images: 0, strongCalls: 0 };
 
@@ -45,8 +47,8 @@ async function complete(system: string, content: Content, model = LLM_MODEL): Pr
   if (model !== LLM_MODEL) usage.strongCalls++;
   if (Array.isArray(content)) usage.images += content.filter((c) => c.type === "image_url").length;
   let lastErr: unknown;
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const wait = lastCallAt + MIN_GAP_MS - Date.now();
+  for (let attempt = 0; attempt < 7; attempt++) {
+    const wait = lastCallAt + gapMs - Date.now();
     if (wait > 0) await new Promise((r) => setTimeout(r, wait));
     lastCallAt = Date.now();
     try {
@@ -58,6 +60,7 @@ async function complete(system: string, content: Content, model = LLM_MODEL): Pr
           { role: "user", content: content as never },
         ],
       });
+      gapMs = Math.max(BASE_GAP_MS, Math.round(gapMs * 0.8));
       usage.promptTokens += res.usage?.prompt_tokens ?? 0;
       usage.completionTokens += res.usage?.completion_tokens ?? 0;
       return res.choices[0]?.message.content ?? "{}";
@@ -65,10 +68,12 @@ async function complete(system: string, content: Content, model = LLM_MODEL): Pr
       lastErr = err;
       const msg = String((err as Error).message);
       if (/\b(400|401|403|404)\b/.test(msg)) break;
-      // A spent quota will not recover within this run: stop calling instead of retrying.
-      if (/quota|exceeded your current/i.test(msg) || (/\b429\b/.test(msg) && attempt === 2)) { quotaExhausted = true; break; }
+      // Only a daily limit is final. Per-minute limits use the same "exceeded your current quota" wording and clear within a minute.
+      if (/per.?day|PerDay|daily/i.test(msg)) { quotaExhausted = true; break; }
       // 429/503 are rejected before any tokens are processed, so retrying costs nothing but time.
-      await new Promise((r) => setTimeout(r, /\b(429|503)\b/.test(msg) ? 8000 * (attempt + 1) : 1500));
+      // 429/503 are rejected before any tokens are processed, so waiting them out costs time, not money.
+      if (/\b(429|503)\b/.test(msg)) gapMs = Math.min(15000, gapMs * 2);
+      await new Promise((r) => setTimeout(r, /\b(429|503)\b/.test(msg) ? 15000 : 1500));
     }
   }
   throw lastErr;

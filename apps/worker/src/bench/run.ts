@@ -24,7 +24,7 @@ export type RunRecord = {
   error?: string;
 };
 
-const TIMEOUT_MS = 180_000;
+const TIMEOUT_MS = Number(process.env.BENCH_STORE_TIMEOUT_MS ?? 600_000);
 const SELF = fileURLToPath(import.meta.url);
 
 function arg(name: string): string | undefined {
