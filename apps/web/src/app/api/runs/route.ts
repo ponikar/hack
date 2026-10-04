@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db, runs, desc, eq } from "@watchdog/db";
 import { enqueueAudit } from "@/lib/queue";
 import { getSession } from "@/lib/session";
+import { dailyCapResponse } from "@/lib/runs";
 
 const Body = z.object({ storeUrl: z.string().url() });
 
@@ -12,6 +13,9 @@ export async function POST(req: Request) {
 
   const parsed = Body.safeParse(await req.json().catch(() => ({})));
   if (!parsed.success) return NextResponse.json({ error: "Enter a valid store URL." }, { status: 400 });
+  const capped = await dailyCapResponse(session.user.id);
+  if (capped) return capped;
+
   const { storeUrl } = parsed.data;
   const mode = /[?&]mode=fixed/.test(storeUrl) ? "fixed" : /[?&]mode=broken/.test(storeUrl) ? "broken" : undefined;
 

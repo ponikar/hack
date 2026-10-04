@@ -15,6 +15,7 @@
     "bench:score": "tsx src/bench/score.ts"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.0",
     "@watchdog/db": "workspace:*",
     "@watchdog/shared": "workspace:*",
     "cheerio": "^1.0.0",
