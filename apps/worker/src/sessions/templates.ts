@@ -54,10 +54,10 @@ function addToCart(p: StoreProfile): SessionStep {
   const cartPath = p.structure.cartUrl ? pathOf(p.structure.cartUrl, p.finalUrl, "/cart") : "/cart";
   const expect: Expect =
     p.structure.cart === "drawer"
-      ? { anyOf: ["drawerVisible", `urlContains:${cartPath}`] }
+      ? { anyOf: ["drawerVisible", `urlContains:${cartPath}`, "checkoutVisible"] }
       : p.structure.cart === "page"
-        ? { anyOf: [`urlContains:${cartPath}`, "cartCountIncreased"] }
-        : { anyOf: ["drawerVisible", `urlContains:${cartPath}`, "cartCountIncreased"] };
+        ? { anyOf: [`urlContains:${cartPath}`, "cartCountIncreased", "checkoutVisible"] }
+        : { anyOf: ["drawerVisible", `urlContains:${cartPath}`, "cartCountIncreased", "checkoutVisible"] };
   return { op: "act", instr: "add to cart", expect };
 }
 

@@ -170,7 +170,9 @@ async function replayBrowser(session: Session, profile: StoreProfile, browser: B
               agentWhy = r.stuck ? r.why : "";
               if (!r.ok && r.llmError) llmFailed = true;
               // A product page is the agent's call to make (URLs vary: /products/, /p/, /eyeglasses/...); trust its "done" once it has left the listing.
-              ok = (r.ok && (await checkPage(page, s.expect)).ok) || (findsProduct && r.done && page.url() !== startUrl);
+              const searches = /search for/i.test(s.instr);
+              // Product and search pages are the agent's call: URLs vary (/products/, /t/, /w?q=, /s?query=), so trust "done" once the page changed.
+              ok = (r.ok && (await checkPage(page, s.expect)).ok) || ((findsProduct || searches) && r.done && page.url() !== startUrl);
               if (!ok) reason = r.why;
             }
             if (!ok) {
@@ -235,7 +237,10 @@ export async function replaySessions(sessions: Session[], profile: StoreProfile,
     };
     for (const s of sessions.filter((x) => x.archetype === "feed-reader" || !browser)) await run(s);
     // Browser sessions are independent contexts; running them together roughly halves wall time.
-    await Promise.all(sessions.filter((x) => x.archetype === "browser-agent" && browser).map(run));
+    // Bounded concurrency: 3 parallel sessions with screenshots trips free-tier tokens-per-minute limits.
+    const queue = sessions.filter((x) => x.archetype === "browser-agent" && browser);
+    const width = Math.max(1, Number(process.env.SESSION_CONCURRENCY ?? 2));
+    await Promise.all(Array.from({ length: width }, async () => { for (let s = queue.shift(); s; s = queue.shift()) await run(s); }));
   } finally {
     await browser?.close();
   }

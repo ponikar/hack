@@ -112,7 +112,9 @@ export async function probeShopifyProducts(origin: string): Promise<ProductSampl
   try {
     const data = JSON.parse(text) as { products?: Array<{ handle: string; title: string; product_type?: string; options?: Array<{ name: string }>; variants?: Array<{ price: string; available?: boolean }> }> };
     if (!data.products?.length) return null;
-    const sellable = (p: { variants?: Array<{ price: string; available?: boolean }> }) =>
+    // Gift cards and samples are always "available" but no shopper is testing those.
+    const sellable = (p: { title: string; product_type?: string; variants?: Array<{ price: string; available?: boolean }> }) =>
+      !/gift ?card|e-?gift|sample|swatch/i.test(`${p.title} ${p.product_type ?? ""}`) &&
       (p.variants ?? []).some((v) => v.available !== false && Number(v.price) > 0);
     const ranked = [...data.products].sort((a, b) => Number(sellable(b)) - Number(sellable(a)));
     return ranked.map((p) => ({
