@@ -34,11 +34,11 @@ async function pickVariant(p: StoreProfile, productName: string): Promise<string
   }
 }
 
-export async function generateSessions(profile: StoreProfile, opts: { maxBrowserSessions?: number } = {}): Promise<Session[]> {
+export async function generateSessions(profile: StoreProfile, opts: { maxBrowserSessions?: number; productHint?: string } = {}): Promise<Session[]> {
   const maxBrowser = opts.maxBrowserSessions ?? 3;
   const liveStore = isLiveStore(profile);
   const productUrl = profile.products.sampleUrls[0] ?? "";
-  const productName = profile.products.sampleNames[0] ?? "";
+  const productName = profile.products.sampleNames[0] ?? opts.productHint ?? "";
   const query = profile.searchQueries[0] || productName || (profile.category !== "other" ? profile.category : "best sellers");
   const variant = await pickVariant(profile, productName);
   const params: TemplateParams = { productUrl, productName, query, variant };

@@ -10,9 +10,10 @@ export type PersonaMeta = {
 export const PERSONAS: PersonaMeta[] = [
   { id: "chatgpt-shopping", label: "ChatGPT Shopping", vendor: "OpenAI", archetype: "feed-reader" },
   { id: "grok", label: "Grok", vendor: "xAI", archetype: "feed-reader" },
-  { id: "perplexity-search", label: "Perplexity search", vendor: "Perplexity", archetype: "feed-reader" },
+  { id: "perplexity-search", label: "Perplexity", vendor: "Perplexity", archetype: "feed-reader" },
   { id: "google-ai-mode", label: "Google AI Mode", vendor: "Google", archetype: "feed-reader" },
-  { id: "chatgpt-atlas", label: "ChatGPT Atlas", vendor: "OpenAI", archetype: "browser-agent" },
+  { id: "claude-user", label: "Claude", vendor: "Anthropic", archetype: "feed-reader" },
+  { id: "chatgpt-atlas", label: "ChatGPT agent", vendor: "OpenAI", archetype: "browser-agent" },
   { id: "perplexity-comet", label: "Perplexity Comet", vendor: "Perplexity", archetype: "browser-agent" },
   { id: "amazon-buy-for-me", label: "Amazon Buy for Me", vendor: "Amazon", archetype: "browser-agent" },
 ];

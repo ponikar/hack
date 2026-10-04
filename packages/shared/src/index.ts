@@ -74,7 +74,15 @@ export type StoreProfile = z.infer<typeof StoreProfile>;
 export const Archetype = z.enum(["feed-reader", "browser-agent"]);
 export type Archetype = z.infer<typeof Archetype>;
 
-export const Persona = z.object({ id: z.string(), label: z.string(), archetype: Archetype });
+export const Persona = z.object({
+  id: z.string(),
+  label: z.string(),
+  archetype: Archetype,
+  userAgent: z.string().optional(),
+  robotsToken: z.string().optional(),
+  obeysRobots: z.boolean().optional(),
+  verified: z.string().optional(),
+});
 export type Persona = z.infer<typeof Persona>;
 
 export const TemplateId = z.enum(["feed-reader", "direct-link", "search-first", "category-browse", "variant-required", "cart-drawer", "buy-now"]);

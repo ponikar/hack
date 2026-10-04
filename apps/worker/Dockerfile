@@ -5,6 +5,8 @@ COPY pnpm-workspace.yaml package.json pnpm-lock.yaml tsconfig.base.json ./
 COPY packages ./packages
 COPY apps/worker ./apps/worker
 RUN pnpm install --frozen-lockfile --filter worker... --prod=false
+# Real Chrome: bundled Chromium is refused by Akamai-style bot checks that let Chrome through.
+RUN cd apps/worker && pnpm exec playwright install --with-deps chrome
 ENV NODE_ENV=production
 ENV SCREENSHOT_DIR=/app/screenshots
 WORKDIR /app/apps/worker
