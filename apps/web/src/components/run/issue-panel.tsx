@@ -162,22 +162,34 @@ function Section({ title, aside, children }: { title: string; aside?: React.Reac
 function Feedback({ runId, fixClass, shareToken }: { runId: string; fixClass: string; shareToken?: string }) {
   const [verdict, setVerdict] = useState<"correct" | "wrong" | null>(null);
   const [comment, setComment] = useState("");
-  const [state, setState] = useState<"idle" | "sending" | "sent">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "saved" | "detailSent">("idle");
   const [error, setError] = useState<string | null>(null);
 
-  async function submit() {
-    if (!verdict) return;
+  // The click itself is the feedback; most people never press a second button, so save immediately.
+  async function choose(v: "correct" | "wrong") {
+    setVerdict(v);
     setState("sending");
     setError(null);
-    const r = await sendFeedback({ runId, fixClass, verdict, comment: comment.trim() || undefined, shareToken });
-    if (r.ok) setState("sent");
+    const r = await sendFeedback({ runId, fixClass, verdict: v, shareToken });
+    if (r.ok) setState("saved");
     else {
       setState("idle");
       setError(r.message);
     }
   }
 
-  if (state === "sent") {
+  async function sendDetail() {
+    if (!verdict || !comment.trim()) return;
+    setState("sending");
+    const r = await sendFeedback({ runId, fixClass, verdict, comment: comment.trim(), shareToken });
+    if (r.ok) setState("detailSent");
+    else {
+      setState("saved");
+      setError(r.message);
+    }
+  }
+
+  if (state === "detailSent") {
     return (
       <div className="rounded-md border border-line bg-surface p-3 text-sm text-ink-2">
         Thanks. Your answer goes straight to the team tuning these checks.
@@ -188,9 +200,10 @@ function Feedback({ runId, fixClass, shareToken }: { runId: string; fixClass: st
   const opt = (v: "correct" | "wrong", Icon: typeof ThumbsUp, text: string) => (
     <button
       type="button"
-      onClick={() => setVerdict(v)}
+      onClick={() => choose(v)}
+      disabled={state === "sending" || state === "saved"}
       aria-pressed={verdict === v}
-      className={`inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-sm font-medium transition-colors ${
+      className={`inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-sm font-medium transition-colors disabled:cursor-default ${
         verdict === v
           ? v === "correct"
             ? "border-ok/40 bg-ok-soft text-ok"
@@ -206,11 +219,12 @@ function Feedback({ runId, fixClass, shareToken }: { runId: string; fixClass: st
   return (
     <section className="rounded-md border border-line bg-surface p-3.5">
       <h3 className="text-[13px] font-semibold">Is this right?</h3>
-      <div className="mt-2 flex flex-wrap gap-2">
+      <div className="mt-2 flex flex-wrap items-center gap-2">
         {opt("correct", ThumbsUp, "Correct")}
         {opt("wrong", ThumbsDown, "Wrong")}
+        {state === "saved" && <span className="text-xs text-muted">Saved. Thank you.</span>}
       </div>
-      {verdict && (
+      {verdict && state !== "idle" && (
         <div className="mt-3 space-y-2">
           <label htmlFor={`fb-${fixClass}`} className="text-xs text-muted">
             {verdict === "wrong" ? "What did we get wrong? (optional)" : "Anything to add? (optional)"}
@@ -226,15 +240,15 @@ function Feedback({ runId, fixClass, shareToken }: { runId: string; fixClass: st
           />
           <button
             type="button"
-            onClick={submit}
-            disabled={state === "sending"}
+            onClick={sendDetail}
+            disabled={state === "sending" || !comment.trim()}
             className="inline-flex h-8 items-center rounded-md bg-ink px-3 text-sm font-medium text-bg hover:opacity-90 disabled:opacity-50"
           >
-            {state === "sending" ? "Sending…" : "Send feedback"}
+            {state === "sending" ? "Sending…" : "Add detail"}
           </button>
-          {error && <p className="text-sm text-fail">{error}</p>}
         </div>
       )}
+      {error && <p className="mt-2 text-sm text-fail">{error}</p>}
     </section>
   );
 }
