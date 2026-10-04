@@ -101,7 +101,14 @@ export const searchFirst: Template = (p, params) => [
   {
     op: "act",
     instr: `open site search and search for '${params.query}'`,
-    expect: { urlContains: p.structure.searchUrl ? pathOf(p.structure.searchUrl, p.finalUrl, "search") : "search" },
+    // Searches often redirect to a category page (John Lewis: /home-garden/c500006?originalSearchTerm=home); any URL carrying the term counts.
+    expect: {
+      anyOf: [
+        `urlContains:${p.structure.searchUrl ? pathOf(p.structure.searchUrl, p.finalUrl, "search") : "search"}`,
+        `urlContains:=${encodeURIComponent(params.query).replace(/%20/g, "+").slice(0, 24)}`,
+        `urlContains:=${encodeURIComponent(params.query).slice(0, 24)}`,
+      ],
+    },
   },
   openProduct(params),
   ...cartToEnd(p, params),
